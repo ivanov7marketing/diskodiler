@@ -549,6 +549,38 @@ function initExitPopup() {
   });
 }
 
+function initChatBubbleMotion() {
+  const bubble = qs(".chat-bubble");
+  if (!bubble || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  let lastY = window.scrollY;
+  let lastTime = performance.now();
+  let resetTimer = null;
+  let frame = null;
+
+  function setLift(value) {
+    bubble.style.setProperty("--chat-lift", `${value.toFixed(1)}px`);
+  }
+
+  window.addEventListener("scroll", () => {
+    const now = performance.now();
+    const currentY = window.scrollY;
+    const deltaY = Math.abs(currentY - lastY);
+    const deltaTime = Math.max(now - lastTime, 16);
+    const velocity = deltaY / deltaTime;
+    const lift = Math.min(64, velocity * 62);
+
+    lastY = currentY;
+    lastTime = now;
+
+    if (frame) cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(() => setLift(lift));
+
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(() => setLift(0), 130);
+  }, { passive: true });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initMenu();
@@ -561,4 +593,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initTradeIn();
   initRecentlyViewed();
   initExitPopup();
+  initChatBubbleMotion();
 });
