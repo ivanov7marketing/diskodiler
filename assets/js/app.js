@@ -244,6 +244,8 @@ function initWheelQuiz() {
 
     function showStep(index) {
       current = Math.max(0, Math.min(index, steps.length - 1));
+      form.classList.toggle("is-first-step", current === 0);
+      form.classList.toggle("is-final-step", current === steps.length - 1);
       steps.forEach((step, stepIndex) => {
         const active = stepIndex === current;
         step.hidden = !active;
@@ -423,7 +425,9 @@ function initCatalog() {
   function card(item) {
     return `
       <article class="product-card" data-product-card>
-        <img src="${item.image}" alt="${item.title}" width="900" height="675" loading="lazy" decoding="async">
+        <div class="product-media">
+          <img src="${item.image}" alt="${item.title}" width="900" height="900" loading="lazy" decoding="async">
+        </div>
         <div class="product-body">
           <div class="product-title">
             <span class="badge accent">${item.fit}</span>
