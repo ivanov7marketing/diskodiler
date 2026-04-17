@@ -481,6 +481,46 @@ h3 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.quiz-options-grid .quiz-option {
+  justify-content: center;
+  overflow: visible;
+  padding: 14px 12px;
+}
+
+.quiz-options-grid .quiz-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.quiz-options-grid .quiz-option span {
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+.quiz-options-grid .quiz-option.is-selected::after {
+  content: "\2713";
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .38);
+  border-radius: 4px;
+  background: var(--accent);
+  color: #17120a;
+  font-size: .92rem;
+  font-weight: 900;
+  line-height: 1;
+  transform: translateX(-50%);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .32);
+}
+
 .quiz-options-two,
 .quiz-contact-method {
   grid-template-columns: 1fr;
@@ -1306,10 +1346,6 @@ h3 {
     min-height: 54px;
     justify-content: center;
     padding: 10px 8px;
-  }
-
-  .quiz-options-grid .quiz-option input {
-    margin-right: 8px;
   }
 
   .quiz-footer {
