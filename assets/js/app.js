@@ -131,6 +131,188 @@ function initForms() {
   });
 }
 
+const quizModelsByBrand = {
+  BMW: ["X1", "X3 G01", "X4 G02", "X5 G05", "X6 G06", "X7 G07", "3 / 4 G20", "5 G30", "M3 / M4 G80"],
+  "Mercedes-Benz": ["C-Class", "E-Class", "S-Class", "GLC", "GLE W167", "GLS", "AMG GT"],
+  Porsche: ["Macan", "Cayenne", "Panamera", "911", "Taycan"],
+  "Range Rover": ["Evoque", "Velar", "Sport", "Vogue", "Defender", "Discovery"],
+  Lamborghini: ["Urus", "Huracan", "Aventador"]
+};
+
+function initWheelQuiz() {
+  qsa("[data-wheel-quiz]").forEach((form) => {
+    if (form.dataset.quizReady === "true") return;
+    form.dataset.quizReady = "true";
+    form.noValidate = true;
+
+    const steps = qsa("[data-quiz-step]", form);
+    const prevButton = qs("[data-quiz-prev]", form);
+    const nextButton = qs("[data-quiz-next]", form);
+    const submitButton = qs("[data-quiz-submit]", form);
+    const progress = qs("[data-quiz-progress]", form);
+    const progressRoot = progress?.parentElement;
+    const progressLabel = qs("b", progressRoot);
+    const percent = qs("[data-quiz-percent]", form);
+    const notice = qs(".notice", form);
+    const progressValues = ["6%", "40%", "60%", "80%", "100%"];
+    const brandSelect = qs("[data-quiz-brand]", form);
+    const modelSelect = qs("[data-quiz-model]", form);
+    let current = 0;
+
+    function option(value, label = value) {
+      return `<option value="${value}">${label}</option>`;
+    }
+
+    function populateBrands() {
+      if (!brandSelect) return;
+      brandSelect.innerHTML = option("", "Выберите МАРКУ") + Object.keys(quizModelsByBrand).map((brand) => option(brand)).join("");
+    }
+
+    function populateModels(brand) {
+      if (!modelSelect) return;
+      const models = quizModelsByBrand[brand] || [];
+      modelSelect.innerHTML = option("", "Выберите МОДЕЛЬ") + models.map((model) => option(model)).join("");
+      modelSelect.disabled = models.length === 0;
+    }
+
+    function selectedRadio(name) {
+      return qs(`[name="${name}"]:checked`, form);
+    }
+
+    function hasChecked(name) {
+      return qsa(`[name="${name}"]:checked`, form).length > 0;
+    }
+
+    function syncContactRequirement() {
+      const telegram = qs("[name='telegram']", form);
+      const method = selectedRadio("contactMethod")?.value;
+      if (!telegram) return;
+      telegram.required = method === "Telegram";
+      if (method !== "Telegram") telegram.removeAttribute("aria-invalid");
+    }
+
+    function updateOptionStates() {
+      qsa("[data-quiz-option]", form).forEach((option) => {
+        const input = qs("input", option);
+        option.classList.toggle("is-selected", Boolean(input?.checked));
+      });
+    }
+
+    function markStep(step, invalid) {
+      qsa("input, textarea, select", step).forEach((field) => {
+        const isChoice = field.type === "checkbox" || field.type === "radio";
+        if (isChoice) return;
+        const shouldMark = invalid && field.required && !field.value.trim();
+        field.toggleAttribute("aria-invalid", shouldMark);
+      });
+    }
+
+    function isStepValid(index, shouldMark = false) {
+      const step = steps[index];
+      if (!step) return false;
+
+      let valid = true;
+      if (index === 0) {
+        valid = Boolean(qs("[name='brand']", step)?.value) && Boolean(qs("[name='model']", step)?.value);
+      }
+      if (index === 1) valid = hasChecked("diameter");
+      if (index === 2) valid = Boolean(selectedRadio("tires"));
+      if (index === 3) valid = Boolean(qs("[name='city']", step)?.value.trim());
+      if (index === 4) {
+        syncContactRequirement();
+        const method = selectedRadio("contactMethod")?.value;
+        const telegram = qs("[name='telegram']", step);
+        const phone = qs("[name='phone']", step);
+        const consent = qs("[name='consent']", step);
+        valid = Boolean(phone?.value.trim()) && Boolean(consent?.checked);
+        if (method === "Telegram") valid = valid && Boolean(telegram?.value.trim());
+      }
+
+      if (shouldMark) markStep(step, !valid);
+      return valid;
+    }
+
+    function updateControls() {
+      const finalStep = current === steps.length - 1;
+      const valid = isStepValid(current);
+      prevButton.hidden = current === 0;
+      nextButton.hidden = finalStep;
+      submitButton.hidden = !finalStep;
+      nextButton.disabled = !valid;
+      submitButton.disabled = !valid;
+    }
+
+    function showStep(index) {
+      current = Math.max(0, Math.min(index, steps.length - 1));
+      steps.forEach((step, stepIndex) => {
+        const active = stepIndex === current;
+        step.hidden = !active;
+        step.classList.toggle("is-active", active);
+      });
+      const value = progressValues[current] || "100%";
+      progressRoot?.style.setProperty("--quiz-progress", value);
+      progressLabel?.setAttribute("data-progress-label", value);
+      if (percent) percent.textContent = value;
+      notice?.classList.remove("is-visible");
+      updateOptionStates();
+      updateControls();
+    }
+
+    qsa("input, textarea", form).forEach((field) => {
+      field.addEventListener("input", () => {
+        field.removeAttribute("aria-invalid");
+        syncContactRequirement();
+        updateControls();
+      });
+      field.addEventListener("change", () => {
+        syncContactRequirement();
+        updateOptionStates();
+        updateControls();
+      });
+    });
+
+    brandSelect?.addEventListener("change", () => {
+      populateModels(brandSelect.value);
+      brandSelect.removeAttribute("aria-invalid");
+      modelSelect?.removeAttribute("aria-invalid");
+      updateControls();
+    });
+
+    modelSelect?.addEventListener("change", () => {
+      modelSelect.removeAttribute("aria-invalid");
+      updateControls();
+    });
+
+    nextButton.addEventListener("click", () => {
+      if (!isStepValid(current, true)) {
+        updateControls();
+        return;
+      }
+      showStep(current + 1);
+    });
+
+    prevButton.addEventListener("click", () => showStep(current - 1));
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!isStepValid(current, true)) {
+        updateControls();
+        return;
+      }
+      reachGoal("wheel_quiz_submit");
+      if (notice) {
+        notice.textContent = "Заявка сохранена. Менеджер подготовит подборку дисков и свяжется с вами.";
+        notice.classList.add("is-visible");
+      }
+      submitButton.disabled = true;
+    });
+
+    populateBrands();
+    populateModels(brandSelect?.value || "");
+    showStep(0);
+  });
+}
+
 const catalogItems = [
   {
     brand: "BMW",
@@ -369,6 +551,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initGoals();
   initModals();
   initForms();
+  initWheelQuiz();
   initCatalog();
   initGallery();
   initTradeIn();

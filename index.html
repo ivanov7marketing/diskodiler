@@ -87,17 +87,87 @@
           </div>
           <h1>Оригинальные диски BMW, Mercedes, Porsche — гарантия подлинности</h1>
           <p class="lead">Подберем точный комплект по VIN, сверим OEM-артикулы, PCD, вылет и диаметр, покажем маркировку перед оплатой и отправим по России.</p>
-          <div class="vin-widget" aria-label="Подбор дисков по VIN">
-            <form data-vin-form data-goal="vin_hero_submit">
-              <div class="field-row">
-                <label class="sr-only" for="hero-vin">VIN автомобиля</label>
-                <input class="input" id="hero-vin" name="vin" autocomplete="off" placeholder="Введите VIN или модель: X5 G05, Cayenne, GLE W167">
-                <button class="btn" type="submit" data-goal="vin_hero_submit">Подобрать по VIN</button>
+          <form class="wheel-quiz" data-wheel-quiz aria-label="Квиз подбора дисков">
+            <div class="quiz-stage">
+              <section class="quiz-step is-active" data-quiz-step>
+                <h2><span>01.</span> Выберите марку и модель вашего авто</h2>
+                <div class="quiz-selects">
+                  <label class="sr-only" for="quiz-brand">Марка автомобиля</label>
+                  <select class="quiz-field" id="quiz-brand" name="brand" required data-quiz-brand>
+                    <option value="">Выберите МАРКУ</option>
+                  </select>
+                  <label class="sr-only" for="quiz-model">Модель автомобиля</label>
+                  <select class="quiz-field" id="quiz-model" name="model" required data-quiz-model disabled>
+                    <option value="">Выберите МОДЕЛЬ</option>
+                  </select>
+                </div>
+              </section>
+              <section class="quiz-step" data-quiz-step hidden>
+                <div class="quiz-title">
+                  <h2><span>02.</span> Какой диаметр дисков?</h2>
+                  <p class="small">Можно выбрать несколько вариантов</p>
+                </div>
+                <div class="quiz-options quiz-options-grid" role="group" aria-label="Диаметр дисков">
+                  <label class="quiz-option" data-quiz-option><input type="checkbox" name="diameter" value="R15"><span>R15</span></label>
+                  <label class="quiz-option" data-quiz-option><input type="checkbox" name="diameter" value="R16"><span>R16</span></label>
+                  <label class="quiz-option" data-quiz-option><input type="checkbox" name="diameter" value="R17"><span>R17</span></label>
+                  <label class="quiz-option" data-quiz-option><input type="checkbox" name="diameter" value="R18"><span>R18</span></label>
+                  <label class="quiz-option" data-quiz-option><input type="checkbox" name="diameter" value="R19"><span>R19</span></label>
+                  <label class="quiz-option" data-quiz-option><input type="checkbox" name="diameter" value="R20"><span>R20</span></label>
+                  <label class="quiz-option" data-quiz-option><input type="checkbox" name="diameter" value="R21"><span>R21</span></label>
+                  <label class="quiz-option" data-quiz-option><input type="checkbox" name="diameter" value="R22"><span>R22</span></label>
+                  <label class="quiz-option" data-quiz-option><input type="checkbox" name="diameter" value="R23"><span>R23</span></label>
+                  <label class="quiz-option" data-quiz-option><input type="checkbox" name="diameter" value="R24"><span>R24</span></label>
+                </div>
+              </section>
+              <section class="quiz-step" data-quiz-step hidden>
+                <h2><span>03.</span> Нужны ли вам шины?</h2>
+                <div class="quiz-options quiz-options-two" role="radiogroup" aria-label="Нужны ли шины">
+                  <label class="quiz-option" data-quiz-option><input type="radio" name="tires" value="Да, подберите варианты" required><span>Да, подберите варианты</span></label>
+                  <label class="quiz-option" data-quiz-option><input type="radio" name="tires" value="Нет" required><span>Нет</span></label>
+                </div>
+              </section>
+              <section class="quiz-step" data-quiz-step hidden>
+                <h2><span>04.</span> Ваш город</h2>
+                <label class="sr-only" for="quiz-city">Город</label>
+                <textarea class="quiz-field" id="quiz-city" name="city" rows="2" placeholder="Спб" required></textarea>
+              </section>
+              <section class="quiz-step" data-quiz-step hidden>
+                <div class="quiz-title">
+                  <h2><span>05.</span> Отлично! Все готово</h2>
+                  <p class="small">Оставьте контакты, и менеджер подготовит подборку.</p>
+                </div>
+                <div class="quiz-contact">
+                  <div class="quiz-contact-method" role="radiogroup" aria-label="Способ связи">
+                    <label class="quiz-option" data-quiz-option><input type="radio" name="contactMethod" value="Telegram" checked><span>Telegram</span></label>
+                    <label class="quiz-option" data-quiz-option><input type="radio" name="contactMethod" value="Звонок"><span>Звонок</span></label>
+                  </div>
+                  <label class="sr-only" for="quiz-telegram">Ник в Telegram</label>
+                  <input class="quiz-field" id="quiz-telegram" name="telegram" autocomplete="off" placeholder="@username" required>
+                  <label class="sr-only" for="quiz-name">Ваше имя</label>
+                  <input class="quiz-field" id="quiz-name" name="name" autocomplete="name" placeholder="Ваше имя">
+                  <label class="sr-only" for="quiz-phone">Номер телефона</label>
+                  <input class="quiz-field" id="quiz-phone" name="phone" autocomplete="tel" placeholder="+7 (___) ___-__-__" required>
+                  <label class="quiz-consent">
+                    <input type="checkbox" name="consent" required>
+                    <span>Я даю согласие на обработку персональных данных и принимаю условия публичной оферты</span>
+                  </label>
+                </div>
+              </section>
+            </div>
+            <div class="quiz-footer">
+              <div class="quiz-progress" aria-hidden="true">
+                <div class="quiz-progress-bar"><span data-quiz-progress></span><b></b></div>
+                <strong data-quiz-percent>6%</strong>
               </div>
-            </form>
-            <p class="small">Ответим с проверкой совместимости, цены и сроков. Без спама.</p>
+              <div class="quiz-actions">
+                <button class="btn secondary" type="button" data-quiz-prev hidden>Назад</button>
+                <button class="btn" type="button" data-quiz-next disabled>Далее</button>
+                <button class="btn" type="submit" data-quiz-submit hidden>Подобрать диски</button>
+              </div>
+            </div>
             <div class="notice" role="status"></div>
-          </div>
+          </form>
         </div>
       </section>
 
