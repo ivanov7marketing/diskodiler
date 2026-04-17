@@ -1,0 +1,377 @@
+const YM_COUNTER_ID = window.DISKODILER_METRIKA_ID || null;
+
+function reachGoal(goal) {
+  if (!goal) return;
+  if (YM_COUNTER_ID && typeof window.ym === "function") {
+    window.ym(YM_COUNTER_ID, "reachGoal", goal);
+  }
+}
+
+function qs(selector, root = document) {
+  return root.querySelector(selector);
+}
+
+function qsa(selector, root = document) {
+  return [...root.querySelectorAll(selector)];
+}
+
+function initTheme() {
+  const saved = localStorage.getItem("diskodiler-theme");
+  if (saved) document.documentElement.dataset.theme = saved;
+  qsa("[data-theme-toggle]").forEach((button) => {
+    if (button.dataset.ready === "true") return;
+    button.dataset.ready = "true";
+    button.addEventListener("click", () => {
+      const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem("diskodiler-theme", next);
+      button.setAttribute("aria-label", next === "light" ? "Включить темную тему" : "Включить светлую тему");
+    });
+  });
+}
+
+function initMenu() {
+  const button = qs("[data-menu-toggle]");
+  const panel = qs("[data-mobile-panel]");
+  if (!button || !panel) return;
+  button.addEventListener("click", () => {
+    const isOpen = panel.classList.toggle("is-open");
+    button.setAttribute("aria-expanded", String(isOpen));
+  });
+  qsa("a", panel).forEach((link) => {
+    link.addEventListener("click", () => {
+      panel.classList.remove("is-open");
+      button.setAttribute("aria-expanded", "false");
+    });
+  });
+}
+
+function initGoals() {
+  qsa("[data-goal]").forEach((item) => {
+    if (item.dataset.goalReady === "true") return;
+    item.dataset.goalReady = "true";
+    item.addEventListener("click", () => reachGoal(item.dataset.goal));
+  });
+}
+
+function openModal(id) {
+  const modal = document.getElementById(id);
+  if (!modal) return;
+  modal.classList.add("is-open");
+  modal.setAttribute("aria-hidden", "false");
+  const focusable = qs("input, button, textarea, select, a", modal);
+  if (focusable) focusable.focus();
+}
+
+function closeModal(modal) {
+  modal.classList.remove("is-open");
+  modal.setAttribute("aria-hidden", "true");
+}
+
+function initModals() {
+  qsa("[data-open-modal]").forEach((button) => {
+    if (button.dataset.modalReady === "true") return;
+    button.dataset.modalReady = "true";
+    button.addEventListener("click", () => openModal(button.dataset.openModal));
+  });
+  qsa("[data-close-modal]").forEach((button) => {
+    if (button.dataset.modalCloseReady === "true") return;
+    button.dataset.modalCloseReady = "true";
+    button.addEventListener("click", () => closeModal(button.closest(".modal")));
+  });
+  qsa(".modal").forEach((modal) => {
+    if (modal.dataset.backdropReady === "true") return;
+    modal.dataset.backdropReady = "true";
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) closeModal(modal);
+    });
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    qsa(".modal.is-open").forEach(closeModal);
+    qs("[data-exit-popup]")?.classList.remove("is-open");
+  });
+}
+
+function normalizeVin(value) {
+  return value.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+}
+
+function initForms() {
+  qsa("[data-vin-form]").forEach((form) => {
+    const notice = qs(".notice", form.closest(".vin-widget, .vin-panel, .modal-card") || document);
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const input = qs("[name='vin']", form);
+      const vin = normalizeVin(input?.value || "");
+      if (vin.length < 7) {
+        input?.setAttribute("aria-invalid", "true");
+        input?.focus();
+        return;
+      }
+      input?.removeAttribute("aria-invalid");
+      reachGoal(form.dataset.goal || "vin_submit");
+      if (notice) {
+        notice.textContent = "VIN принят. Менеджер проверит комплектацию, OEM-артикулы и совместимость по вылету/PCD.";
+        notice.classList.add("is-visible");
+      }
+    });
+  });
+
+  qsa("[data-lead-form]").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      reachGoal(form.dataset.goal || "lead_submit");
+      const notice = qs(".notice", form.parentElement);
+      if (notice) {
+        notice.textContent = "Заявка сохранена. Для демонстрации сайта отправка подключается к CRM на этапе интеграции.";
+        notice.classList.add("is-visible");
+      }
+    });
+  });
+}
+
+const catalogItems = [
+  {
+    brand: "BMW",
+    model: "X5 G05",
+    year: "2024",
+    size: "R20",
+    style: "Double Spoke",
+    color: "Jet Black",
+    title: '20" Double Spoke 699 Jet Black',
+    oem: "36118089896",
+    price: "190 000 ₽",
+    fit: "BMW X5 G05",
+    stock: "Осталось 2 шт.",
+    specs: "5x112 • ET35 • DIA 66.6",
+    image: "https://images.unsplash.com/photo-1603386329225-868f9b1ee6c9?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    brand: "BMW",
+    model: "X3 G01",
+    year: "2023",
+    size: "R19",
+    style: "Y-Spoke",
+    color: "Ferricgrey",
+    title: '19" Y-Spoke 898M Performance',
+    oem: "36118091508",
+    price: "269 000 ₽",
+    fit: "BMW X3 G01",
+    stock: "Осталось 4 шт.",
+    specs: "5x112 • ET32 • DIA 66.6",
+    image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    brand: "BMW",
+    model: "3/4 G20",
+    year: "2022",
+    size: "R19",
+    style: "Double Spoke",
+    color: "Night Gold",
+    title: '19" Style 793 Individual',
+    oem: "36118089896 / 36118089897",
+    price: "259 000 ₽",
+    fit: "BMW 3 / 4 G20 G22 G23",
+    stock: "Осталось 2 шт.",
+    specs: "5x112 • ET27/40 • DIA 66.6",
+    image: "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    brand: "Mercedes-Benz",
+    model: "GLE W167",
+    year: "2024",
+    size: "R21",
+    style: "V-Spoke",
+    color: "Bicolor",
+    title: '21" AMG V-Spoke Bicolor',
+    oem: "A1674012700",
+    price: "Цена по запросу",
+    fit: "Mercedes-Benz GLE W167",
+    stock: "Осталось 1 комплект",
+    specs: "5x112 • ET49 • DIA 66.6",
+    image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    brand: "Porsche",
+    model: "Cayenne",
+    year: "2023",
+    size: "R22",
+    style: "Y-Spoke",
+    color: "Jet Black",
+    title: '22" Cayenne RS Spyder Design',
+    oem: "9Y0601025",
+    price: "330 000 ₽",
+    fit: "Porsche Cayenne",
+    stock: "Осталось 2 шт.",
+    specs: "5x130 • ET50 • DIA 71.6",
+    image: "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    brand: "Range Rover",
+    model: "Sport",
+    year: "2024",
+    size: "R23",
+    style: "Double Spoke",
+    color: "Bicolor",
+    title: '23" Range Rover Style 1075',
+    oem: "LR161547",
+    price: "310 000 ₽",
+    fit: "Range Rover Sport",
+    stock: "Осталось 2 шт.",
+    specs: "5x120 • ET47 • DIA 72.6",
+    image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=80"
+  }
+];
+
+function initCatalog() {
+  const grid = qs("[data-products-grid]");
+  const form = qs("[data-filter-form]");
+  if (!grid || !form) return;
+
+  const params = new URLSearchParams(window.location.search);
+  qsa("select", form).forEach((select) => {
+    if (params.get(select.name)) select.value = params.get(select.name);
+  });
+
+  function matches(item, data) {
+    return Object.entries(data).every(([key, value]) => !value || item[key] === value);
+  }
+
+  function card(item) {
+    return `
+      <article class="product-card" data-product-card>
+        <img src="${item.image}" alt="${item.title}" width="900" height="675" loading="lazy" decoding="async">
+        <div class="product-body">
+          <div class="product-title">
+            <span class="badge accent">${item.fit}</span>
+            <h3>${item.title}</h3>
+            <p class="small">OEM: ${item.oem}</p>
+          </div>
+          <p class="spec-list">${item.specs}<br>${item.brand} • ${item.model} • ${item.year}</p>
+          <div class="hero-meta">
+            <span class="badge">${item.color}</span>
+            <span class="badge">${item.stock}</span>
+          </div>
+          <p class="price">${item.price}</p>
+          <div class="card-actions">
+            <a class="btn" href="product.html" data-goal="catalog_add_to_cart">В корзину</a>
+            <button class="btn secondary" type="button" data-open-modal="vin-modal" data-goal="catalog_vin_check">Проверить по VIN</button>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function render() {
+    const data = Object.fromEntries(new FormData(form).entries());
+    const filtered = catalogItems.filter((item) => matches(item, data));
+    grid.innerHTML = filtered.map(card).join("");
+    qs("[data-result-count]").textContent = `${filtered.length} комплектов`;
+    qs("[data-empty-state]")?.classList.toggle("is-visible", filtered.length === 0);
+    const url = new URL(window.location);
+    Object.entries(data).forEach(([key, value]) => {
+      if (value) url.searchParams.set(key, value);
+      else url.searchParams.delete(key);
+    });
+    history.replaceState(null, "", url);
+    initModals();
+    initGoals();
+  }
+
+  form.addEventListener("change", () => {
+    reachGoal("catalog_filter_apply");
+    render();
+  });
+  form.addEventListener("reset", () => {
+    setTimeout(render, 0);
+  });
+  render();
+}
+
+function initGallery() {
+  const main = qs("[data-gallery-main]");
+  const thumbs = qsa("[data-gallery-thumb]");
+  if (!main || thumbs.length === 0) return;
+  let index = 0;
+
+  function show(next) {
+    index = (next + thumbs.length) % thumbs.length;
+    const thumb = thumbs[index];
+    main.src = thumb.dataset.large;
+    main.alt = thumb.dataset.alt;
+    thumbs.forEach((item, itemIndex) => item.classList.toggle("is-active", itemIndex === index));
+  }
+
+  thumbs.forEach((thumb, thumbIndex) => {
+    thumb.addEventListener("click", () => show(thumbIndex));
+  });
+  qs("[data-gallery-prev]")?.addEventListener("click", () => show(index - 1));
+  qs("[data-gallery-next]")?.addEventListener("click", () => show(index + 1));
+  show(0);
+}
+
+function initTradeIn() {
+  const form = qs("[data-tradein-form]");
+  if (!form) return;
+  const result = qs("[data-tradein-result]");
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const newPrice = Number(form.dataset.price || 0);
+    const value = Number(qs("[name='tradeinValue']", form).value || 0);
+    const delta = Math.max(newPrice - value, 0);
+    result.textContent = `Ориентировочная доплата: ${delta.toLocaleString("ru-RU")} ₽. Финальная оценка после осмотра дисков.`;
+    reachGoal("tradein_calculate");
+  });
+}
+
+function initRecentlyViewed() {
+  const product = qs("[data-product-view]");
+  const list = qs("[data-recently-viewed]");
+  const key = "diskodiler-recent";
+
+  if (product) {
+    const current = {
+      title: product.dataset.title,
+      price: product.dataset.price,
+      url: window.location.pathname
+    };
+    const saved = JSON.parse(localStorage.getItem(key) || "[]").filter((item) => item.title !== current.title);
+    localStorage.setItem(key, JSON.stringify([current, ...saved].slice(0, 4)));
+  }
+
+  if (!list) return;
+  const items = JSON.parse(localStorage.getItem(key) || "[]");
+  list.innerHTML = items.length
+    ? items.map((item) => `<a class="model-tile" href="${item.url}"><strong>${item.title}</strong><span class="small">${item.price}</span></a>`).join("")
+    : `<p class="small">После просмотра товара здесь появятся последние комплекты.</p>`;
+}
+
+function initExitPopup() {
+  const popup = qs("[data-exit-popup]");
+  if (!popup || sessionStorage.getItem("diskodiler-exit-seen")) return;
+  let armed = true;
+  document.addEventListener("mouseleave", (event) => {
+    if (!armed || event.clientY > 0) return;
+    popup.classList.add("is-open");
+    sessionStorage.setItem("diskodiler-exit-seen", "1");
+    armed = false;
+    reachGoal("exit_popup_show");
+  });
+  qsa("[data-close-exit]").forEach((button) => {
+    button.addEventListener("click", () => popup.classList.remove("is-open"));
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initTheme();
+  initMenu();
+  initGoals();
+  initModals();
+  initForms();
+  initCatalog();
+  initGallery();
+  initTradeIn();
+  initRecentlyViewed();
+  initExitPopup();
+});
