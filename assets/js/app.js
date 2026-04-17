@@ -441,8 +441,7 @@ function initCatalog() {
           </div>
           <p class="price">${item.price}</p>
           <div class="card-actions">
-            <a class="btn" href="product.html" data-goal="catalog_add_to_cart">В корзину</a>
-            <button class="btn secondary" type="button" data-open-modal="vin-modal" data-goal="catalog_vin_check">Проверить по VIN</button>
+            <a class="btn" href="product.html" data-goal="catalog_product_details">Подробнее</a>
           </div>
         </div>
       </article>
