@@ -565,10 +565,13 @@ function initChatBubbleMotion() {
   window.addEventListener("scroll", () => {
     const now = performance.now();
     const currentY = window.scrollY;
-    const deltaY = Math.abs(currentY - lastY);
+    const scrollDelta = currentY - lastY;
+    const deltaY = Math.abs(scrollDelta);
     const deltaTime = Math.max(now - lastTime, 16);
     const velocity = deltaY / deltaTime;
-    const lift = Math.min(64, velocity * 62);
+    const lift = scrollDelta >= 0
+      ? Math.min(64, velocity * 62)
+      : -Math.min(14, velocity * 24);
 
     lastY = currentY;
     lastTime = now;
@@ -577,7 +580,7 @@ function initChatBubbleMotion() {
     frame = requestAnimationFrame(() => setLift(lift));
 
     clearTimeout(resetTimer);
-    resetTimer = setTimeout(() => setLift(0), 130);
+    resetTimer = setTimeout(() => setLift(0), 180);
   }, { passive: true });
 }
 
