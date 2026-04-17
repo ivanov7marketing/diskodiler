@@ -1153,8 +1153,8 @@ h3 {
 
 .chat-bubble a,
 .chat-bubble button {
-  width: 52px;
-  height: 52px;
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
   overflow: hidden;
