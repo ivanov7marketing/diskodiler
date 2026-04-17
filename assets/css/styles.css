@@ -903,6 +903,8 @@ h3 {
   display: grid;
   align-self: start;
   grid-template-rows: auto 1fr;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .product-media {
@@ -923,12 +925,25 @@ h3 {
 .product-body {
   display: grid;
   gap: 12px;
+  min-width: 0;
   padding: 16px;
 }
 
 .product-title {
   display: grid;
   gap: 4px;
+  min-width: 0;
+}
+
+.product-title .badge {
+  justify-self: start;
+  max-width: 100%;
+}
+
+.product-title h3,
+.product-title .small {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .price {
@@ -946,6 +961,18 @@ h3 {
 .card-actions {
   display: grid;
   gap: 9px;
+}
+
+.product-card .card-actions {
+  grid-template-columns: 1fr;
+}
+
+.product-card .card-actions .btn {
+  width: 100%;
+  min-width: 0;
+  padding-inline: 12px;
+  text-align: center;
+  white-space: normal;
 }
 
 .empty-state {
