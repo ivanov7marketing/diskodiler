@@ -370,7 +370,7 @@ h3 {
   gap: 22px;
   width: min(100%, 786px);
   padding: 22px;
-  border: 1px solid #ffffff;
+  border: .5px solid #ffffff;
   border-radius: 16px;
   background:
     linear-gradient(118deg, rgba(241, 211, 122, .14), transparent 34%, rgba(154, 107, 39, .12) 72%, transparent),
