@@ -370,8 +370,8 @@ h3 {
   gap: 22px;
   width: min(100%, 786px);
   padding: 22px;
-  border: 1px solid transparent;
-  border-radius: var(--radius);
+  border: 1px solid #ffffff;
+  border-radius: 16px;
   background:
     linear-gradient(118deg, rgba(241, 211, 122, .14), transparent 34%, rgba(154, 107, 39, .12) 72%, transparent),
     linear-gradient(135deg, rgba(6, 7, 9, .38), rgba(34, 25, 13, .22));
@@ -382,7 +382,7 @@ h3 {
 }
 
 [data-theme="light"] .wheel-quiz {
-  border-color: transparent;
+  border-color: #ffffff;
   background:
     linear-gradient(118deg, rgba(241, 211, 122, .13), transparent 34%, rgba(154, 107, 39, .11) 72%, transparent),
     linear-gradient(135deg, rgba(6, 7, 9, .34), rgba(34, 25, 13, .20));
