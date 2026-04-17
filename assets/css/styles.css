@@ -329,6 +329,10 @@ h3 {
   padding-bottom: 36px;
 }
 
+.hero .lead {
+  font-size: 1.296rem;
+}
+
 .hero-meta {
   display: flex;
   flex-wrap: wrap;
