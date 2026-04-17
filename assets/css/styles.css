@@ -151,13 +151,14 @@ h3 {
   position: sticky;
   top: 0;
   z-index: 30;
-  border-bottom: 1px solid color-mix(in srgb, var(--line), transparent 35%);
-  background: color-mix(in srgb, var(--bg), transparent 9%);
-  backdrop-filter: blur(16px);
+  color: #f7f9fc;
+  border-bottom: 1px solid #202020;
+  background: #000;
 }
 
 .topline {
-  border-bottom: 1px solid color-mix(in srgb, var(--line), transparent 40%);
+  border-bottom: 1px solid #202020;
+  background: #000;
 }
 
 .topline-inner,
@@ -170,7 +171,7 @@ h3 {
 
 .topline-inner {
   min-height: 36px;
-  color: var(--muted);
+  color: #b7b0a1;
   font-size: .84rem;
 }
 
@@ -203,7 +204,7 @@ h3 {
   min-height: 44px;
   display: inline-flex;
   align-items: center;
-  color: var(--muted);
+  color: #b7b0a1;
   font-weight: 650;
   font-size: .94rem;
 }
@@ -223,10 +224,10 @@ h3 {
 .menu-btn {
   min-width: 44px;
   min-height: 44px;
-  border: 1px solid var(--line);
+  border: 1px solid #202020;
   border-radius: var(--radius);
-  background: var(--surface);
-  color: var(--text);
+  background: #0a0a0a;
+  color: #f7f9fc;
 }
 
 .menu-btn {
@@ -242,8 +243,8 @@ h3 {
 
 .mobile-panel {
   display: none;
-  border-top: 1px solid var(--line);
-  background: var(--surface);
+  border-top: 1px solid #202020;
+  background: #000;
 }
 
 .mobile-panel.is-open {
