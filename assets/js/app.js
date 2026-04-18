@@ -123,7 +123,7 @@ function renderFooter(config) {
     <footer class="site-footer">
       <div class="container footer-grid">
         <div>
-          <img src="assets/img/logo.webp" alt="ДискоДилер" width="88" height="88" loading="lazy">
+          <img class="footer-logo" src="assets/img/logo.webp" alt="ДискоДилер" width="231" height="70" loading="lazy">
           <p class="small">${config.footerText}</p>
         </div>
         <div class="footer-links">
