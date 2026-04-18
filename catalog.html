@@ -20,17 +20,9 @@
   }
   </script>
 </head>
-<body>
+<body data-page="catalog">
   <div class="page">
-    <header class="site-header">
-      <div class="topline"><div class="container topline-inner"><span>Склад + шиномонтаж: ул. Салова 31с3</span><a href="tel:+79669264666">+7 (966) 926-46-66</a></div></div>
-      <div class="container header-inner">
-        <a class="logo" href="index.html"><img src="assets/img/logo.webp" alt="ДискоДилер" width="88" height="88"></a>
-        <nav class="nav" aria-label="Основная навигация"><a href="catalog.html" aria-current="page">Каталог</a><a href="product.html">Пример товара</a><a href="services.html">Услуги</a><a href="about.html">О компании</a></nav>
-        <div class="header-actions"><button class="icon-btn" type="button" data-theme-toggle aria-label="Переключить тему">◐</button><button class="btn desktop-only" type="button" data-open-modal="vin-modal" data-goal="catalog_header_vin">Подобрать по VIN</button><button class="menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-panel">Меню</button></div>
-      </div>
-      <div class="mobile-panel" id="mobile-panel" data-mobile-panel><nav><a href="index.html">Главная</a><a href="product.html">Пример товара</a><a href="services.html">Услуги</a><a href="about.html">О компании</a></nav></div>
-    </header>
+        <div data-shared-header></div>
 
     <main class="container">
       <nav class="breadcrumbs" aria-label="Хлебные крошки">
@@ -76,14 +68,10 @@
       </section>
     </main>
 
-    <footer class="site-footer"><div class="container footer-grid"><div><img src="assets/img/logo.webp" alt="ДискоДилер" width="88" height="88" loading="lazy"><p class="small">Подбор оригинальных колес по VIN и заводским параметрам.</p></div><div class="footer-links"><a href="https://wa.me/79669264666" data-goal="catalog_footer_whatsapp">WhatsApp</a><a href="mailto:shop@diskodiler.ru">shop@diskodiler.ru</a><span class="small">Пн-Пт 10:00–20:00 • Сб-Вс 12:00–17:00</span></div></div></footer>
+        <div data-shared-footer></div>
   </div>
-
-  <div class="chat-bubble"><a href="https://wa.me/79669264666" aria-label="WhatsApp" data-goal="chat_whatsapp"><img src="assets/img/messengers/icon-whatsapp.png" alt="" loading="lazy"></a><button type="button" aria-label="Telegram пока не указан" data-open-modal="contact-modal" data-goal="chat_telegram_fallback"><img src="assets/img/messengers/icon-telegram.png" alt="" loading="lazy"></button><button type="button" aria-label="Max пока не указан" data-open-modal="contact-modal" data-goal="chat_max_fallback"><img src="assets/img/messengers/icon-max.png" alt="" loading="lazy"></button></div>
-  <div class="sticky-mobile-cta"><button class="btn" type="button" data-open-modal="vin-modal" data-goal="sticky_mobile_vin">Подобрать диски</button></div>
-  <div class="modal" id="vin-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="vin-modal-title"><div class="modal-card"><div class="modal-head"><div><h2 id="vin-modal-title">Проверка по VIN</h2><p class="small">Сверим OEM-артикулы и посадочные параметры.</p></div><button class="icon-btn" type="button" data-close-modal aria-label="Закрыть">×</button></div><form data-vin-form data-goal="vin_catalog_submit"><input class="input" name="vin" placeholder="VIN или модель" autocomplete="off"><input class="input" name="phone" placeholder="+7 (___) ___-__-__"><button class="btn" type="submit">Проверить</button></form><div class="notice" role="status"></div></div></div>
-  <div class="modal" id="contact-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="contact-title"><div class="modal-card"><div class="modal-head"><div><h2 id="contact-title">Telegram уточняется</h2><p class="small">Напишите в WhatsApp или позвоните.</p></div><button class="icon-btn" type="button" data-close-modal aria-label="Закрыть">×</button></div><a class="btn" href="https://wa.me/79669264666">WhatsApp</a></div></div>
-  <div class="exit-popup" data-exit-popup><div class="exit-card"><h2>Нужен точный OEM?</h2><p class="small">Оставьте телефон — проверим по VIN и зафиксируем цену.</p><form data-lead-form data-goal="exit_discount_submit" style="display:grid;gap:10px;margin-top:14px"><input class="input" name="phone" placeholder="+7 (___) ___-__-__"><button class="btn" type="submit">Получить предложение</button><button class="btn secondary" type="button" data-close-exit>Не сейчас</button></form><div class="notice" role="status"></div></div></div>
+  <div data-shared-floating></div>
+  <div data-shared-modals></div>
   <script src="assets/js/app.js" defer></script>
 </body>
 </html>

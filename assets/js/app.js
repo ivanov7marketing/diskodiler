@@ -15,6 +15,233 @@ function qsa(selector, root = document) {
   return [...root.querySelectorAll(selector)];
 }
 
+const WHATSAPP_URL = "https://wa.me/79669264666";
+
+const sharedNavItems = [
+  { page: "catalog", label: "Каталог", href: "catalog.html" },
+  { page: "product", label: "Пример товара", href: "product.html" },
+  { page: "services", label: "Услуги", href: "services.html" },
+  { page: "about", label: "О компании", href: "about.html" }
+];
+
+const sharedPageSettings = {
+  home: {
+    topline: "СПб • ул. Салова 27АД, офис 316",
+    headerAction: { label: "Подобрать по VIN", modal: "vin-modal", goal: "header_vin_click" },
+    stickyAction: { label: "Подобрать диски", modal: "vin-modal", goal: "sticky_mobile_vin" },
+    footerText: "Оригинальные колеса, премиальные диски, подбор по VIN, шиномонтаж и доставка по России.",
+    vinGoal: "vin_modal_submit",
+    exitPopup: {
+      title: "Сохраним подборку и цену?",
+      text: "Оставьте телефон, и менеджер проверит OEM-комплект по VIN. Для первого заказа зафиксируем персональное предложение."
+    }
+  },
+  catalog: {
+    topline: "Склад + шиномонтаж: ул. Салова 31с3",
+    headerAction: { label: "Подобрать по VIN", modal: "vin-modal", goal: "catalog_header_vin" },
+    stickyAction: { label: "Подобрать диски", modal: "vin-modal", goal: "sticky_mobile_vin" },
+    footerText: "Подбор оригинальных колес по VIN и заводским параметрам.",
+    vinGoal: "vin_catalog_submit",
+    exitPopup: {
+      title: "Нужен точный OEM?",
+      text: "Оставьте телефон — проверим по VIN и зафиксируем цену."
+    }
+  },
+  product: {
+    topline: "OEM BMW Group • гарантия 2 года",
+    headerAction: { label: "Задать вопрос", href: WHATSAPP_URL, goal: "product_header_whatsapp" },
+    stickyAction: { label: "Подобрать диски", modal: "vin-modal", goal: "sticky_product_vin" },
+    footerText: "Оригинальные диски BMW, Mercedes, Porsche, Range Rover.",
+    vinGoal: "vin_modal_submit"
+  },
+  services: {
+    topline: "Шиномонтаж: ул. Салова 31с3",
+    headerAction: { label: "Записаться", modal: "service-modal", goal: "service_header_book" },
+    stickyAction: { label: "Записаться", modal: "service-modal", goal: "sticky_service_book" },
+    footerText: "Сервис и продажа оригинальных колес в Санкт-Петербурге.",
+    serviceGoal: "service_form_submit"
+  },
+  about: {
+    topline: "Офис: ул. Салова 27АД, офис 316",
+    headerAction: { label: "Подобрать по VIN", modal: "vin-modal", goal: "about_header_vin" },
+    stickyAction: { label: "Подобрать диски", modal: "vin-modal", goal: "sticky_about_vin" },
+    footerText: "© 2012–2026 ДискоДилер.",
+    vinGoal: "about_vin_submit"
+  }
+};
+
+function actionAttributes(action) {
+  const goal = action.goal ? ` data-goal="${action.goal}"` : "";
+  if (action.href) return `href="${action.href}"${goal}`;
+  return `type="button" data-open-modal="${action.modal}"${goal}`;
+}
+
+function actionTag(action, className = "btn") {
+  const tag = action.href ? "a" : "button";
+  return `<${tag} class="${className}" ${actionAttributes(action)}>${action.label}</${tag}>`;
+}
+
+function renderHeader(page, config) {
+  const desktopNav = sharedNavItems.map((item) => {
+    const current = item.page === page ? ' aria-current="page"' : "";
+    return `<a href="${item.href}"${current}>${item.label}</a>`;
+  }).join("");
+  const mobileNav = [
+    { page: "home", label: "Главная", href: "index.html" },
+    ...sharedNavItems,
+    { label: "Позвонить", href: "tel:+79669264666" }
+  ].filter((item) => item.page !== page).map((item) => `<a href="${item.href}">${item.label}</a>`).join("");
+
+  return `
+    <header class="site-header">
+      <div class="topline">
+        <div class="container topline-inner">
+          <span>${config.topline}</span>
+          <a href="tel:+79669264666">+7 (966) 926-46-66</a>
+        </div>
+      </div>
+      <div class="container header-inner">
+        <a class="logo" href="index.html" aria-label="ДискоДилер на главную">
+          <img src="assets/img/logo.webp" alt="ДискоДилер" width="88" height="88">
+        </a>
+        <nav class="nav" aria-label="Основная навигация">${desktopNav}</nav>
+        <div class="header-actions">
+          <button class="icon-btn" type="button" data-theme-toggle aria-label="Переключить тему">◐</button>
+          ${actionTag(config.headerAction, "btn desktop-only")}
+          <button class="menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-panel">Меню</button>
+        </div>
+      </div>
+      <div class="mobile-panel" id="mobile-panel" data-mobile-panel>
+        <nav aria-label="Мобильная навигация">${mobileNav}</nav>
+      </div>
+    </header>
+  `;
+}
+
+function renderFooter(config) {
+  return `
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <img src="assets/img/logo.webp" alt="ДискоДилер" width="88" height="88" loading="lazy">
+          <p class="small">${config.footerText}</p>
+        </div>
+        <div class="footer-links">
+          <a href="tel:+79669264666">+7 (966) 926-46-66</a>
+          <a href="${WHATSAPP_URL}" data-goal="footer_whatsapp">WhatsApp</a>
+          <a href="mailto:shop@diskodiler.ru">shop@diskodiler.ru</a>
+          <span class="small">Офис: ул. Салова 27АД, офис 316</span>
+          <span class="small">Склад + шиномонтаж: ул. Салова 31с3</span>
+        </div>
+      </div>
+    </footer>
+  `;
+}
+
+function renderFloating(config) {
+  return `
+    <div class="chat-bubble" aria-label="Быстрая связь">
+      <a href="${WHATSAPP_URL}" aria-label="Написать в WhatsApp" data-goal="chat_whatsapp"><img src="assets/img/messengers/icon-whatsapp.png" alt="" loading="lazy"></a>
+      <button type="button" aria-label="Telegram пока не указан" data-open-modal="contact-modal" data-goal="chat_telegram_fallback"><img src="assets/img/messengers/icon-telegram.png" alt="" loading="lazy"></button>
+      <button type="button" aria-label="Max пока не указан" data-open-modal="contact-modal" data-goal="chat_max_fallback"><img src="assets/img/messengers/icon-max.png" alt="" loading="lazy"></button>
+    </div>
+    <div class="sticky-mobile-cta">${actionTag(config.stickyAction)}</div>
+  `;
+}
+
+function renderVinModal(config) {
+  if (!config.vinGoal) return "";
+  return `
+    <div class="modal" id="vin-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="vin-modal-title">
+      <div class="modal-card">
+        <div class="modal-head">
+          <div><h2 id="vin-modal-title">Проверка по VIN</h2><p class="small">Сверим совместимость и OEM-артикулы.</p></div>
+          <button class="icon-btn" type="button" data-close-modal aria-label="Закрыть">×</button>
+        </div>
+        <form data-vin-form data-goal="${config.vinGoal}">
+          <input class="input" name="vin" placeholder="VIN или модель автомобиля" autocomplete="off">
+          <input class="input" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel">
+          <button class="btn" type="submit">Отправить на проверку</button>
+        </form>
+        <div class="notice" role="status"></div>
+      </div>
+    </div>
+  `;
+}
+
+function renderContactModal() {
+  return `
+    <div class="modal" id="contact-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="contact-modal-title">
+      <div class="modal-card">
+        <div class="modal-head">
+          <div><h2 id="contact-modal-title">Telegram уточняется</h2><p class="small">Пока быстрый канал связи — WhatsApp или телефон.</p></div>
+          <button class="icon-btn" type="button" data-close-modal aria-label="Закрыть">×</button>
+        </div>
+        <a class="btn" href="${WHATSAPP_URL}" data-goal="telegram_fallback_whatsapp">Написать в WhatsApp</a>
+      </div>
+    </div>
+  `;
+}
+
+function renderServiceModal(config) {
+  if (!config.serviceGoal) return "";
+  return `
+    <div class="modal" id="service-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="service-modal-title">
+      <div class="modal-card">
+        <div class="modal-head">
+          <div><h2 id="service-modal-title">Запись на сервис</h2><p class="small">Укажите модель, диаметр и желаемую услугу.</p></div>
+          <button class="icon-btn" type="button" data-close-modal aria-label="Закрыть">×</button>
+        </div>
+        <form data-lead-form data-goal="${config.serviceGoal}">
+          <input class="input" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel">
+          <textarea class="textarea" name="message" placeholder="Например: BMW X5 G05, R21, RunFlat"></textarea>
+          <button class="btn" type="submit">Отправить</button>
+        </form>
+        <div class="notice" role="status"></div>
+      </div>
+    </div>
+  `;
+}
+
+function renderExitPopup(config) {
+  if (!config.exitPopup) return "";
+  return `
+    <div class="exit-popup" data-exit-popup>
+      <div class="exit-card">
+        <h2>${config.exitPopup.title}</h2>
+        <p class="small">${config.exitPopup.text}</p>
+        <form data-lead-form data-goal="exit_discount_submit" class="stack-form">
+          <input class="input" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel">
+          <button class="btn" type="submit">Получить предложение</button>
+          <button class="btn secondary" type="button" data-close-exit>Не сейчас</button>
+        </form>
+        <div class="notice" role="status"></div>
+      </div>
+    </div>
+  `;
+}
+
+function renderSharedLayout() {
+  const page = document.body.dataset.page || "home";
+  const config = sharedPageSettings[page] || sharedPageSettings.home;
+  const header = qs("[data-shared-header]");
+  const footer = qs("[data-shared-footer]");
+  const floating = qs("[data-shared-floating]");
+  const modals = qs("[data-shared-modals]");
+
+  if (header) header.outerHTML = renderHeader(page, config);
+  if (footer) footer.outerHTML = renderFooter(config);
+  if (floating) floating.outerHTML = renderFloating(config);
+  if (modals) {
+    modals.outerHTML = [
+      renderVinModal(config),
+      renderContactModal(),
+      renderServiceModal(config),
+      renderExitPopup(config)
+    ].join("");
+  }
+}
+
 function initTheme() {
   const saved = localStorage.getItem("diskodiler-theme");
   if (saved) document.documentElement.dataset.theme = saved;
@@ -584,6 +811,7 @@ function initChatBubbleMotion() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  renderSharedLayout();
   initTheme();
   initMenu();
   initGoals();

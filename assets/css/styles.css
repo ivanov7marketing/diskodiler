@@ -1252,6 +1252,12 @@ h3 {
   gap: 12px;
 }
 
+.stack-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
 .notice {
   display: none;
   border: 1px solid color-mix(in srgb, var(--ok), transparent 35%);
