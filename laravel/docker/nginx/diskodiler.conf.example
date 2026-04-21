@@ -1,0 +1,39 @@
+server {
+    listen 80;
+    server_name diskodiler.shop www.diskodiler.shop;
+
+    location /.well-known/acme-challenge/ {
+        root /usr/share/nginx/diskodiler;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name diskodiler.shop www.diskodiler.shop;
+
+    ssl_certificate /etc/letsencrypt/live/diskodiler.shop/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/diskodiler.shop/privkey.pem;
+
+    root /usr/share/nginx/diskodiler/laravel/public;
+    index index.php index.html;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME /var/www/html/public$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT /var/www/html/public;
+        fastcgi_pass diskodiler-app:9000;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
