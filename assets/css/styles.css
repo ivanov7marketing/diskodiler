@@ -573,6 +573,11 @@ h3 {
   min-height: 58px;
 }
 
+.quiz-contact-fields {
+  display: grid;
+  gap: 12px;
+}
+
 .quiz-consent {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -1146,6 +1151,174 @@ h3 {
   color: var(--muted);
 }
 
+.proposal-page {
+  background:
+    linear-gradient(180deg, rgba(217, 187, 116, .06), transparent 360px),
+    var(--bg);
+}
+
+.proposal-hero {
+  min-height: 620px;
+  display: grid;
+  align-items: end;
+  padding: 72px 0 36px;
+  background:
+    linear-gradient(90deg, rgba(11, 12, 15, .96), rgba(11, 12, 15, .78) 56%, rgba(11, 12, 15, .36)),
+    url("https://images.unsplash.com/photo-1603386329225-868f9b1ee6c?auto=format&fit=crop&w=1800&q=80") center/cover no-repeat;
+}
+
+[data-theme="light"] .proposal-hero {
+  background:
+    linear-gradient(90deg, rgba(247, 249, 252, .97), rgba(247, 249, 252, .82) 56%, rgba(247, 249, 252, .42)),
+    url("https://images.unsplash.com/photo-1603386329225-868f9b1ee6c?auto=format&fit=crop&w=1800&q=80") center/cover no-repeat;
+}
+
+.proposal-hero-inner {
+  display: grid;
+  gap: 26px;
+}
+
+.proposal-hero-copy {
+  display: grid;
+  gap: 20px;
+  max-width: 900px;
+}
+
+.proposal-actions,
+.proposal-hero-facts,
+.proposal-current,
+.proposal-options,
+.proposal-split,
+.proposal-recommendation {
+  display: grid;
+  gap: 16px;
+}
+
+.proposal-actions {
+  grid-template-columns: 1fr;
+  width: min(100%, 520px);
+}
+
+.proposal-hero-facts article,
+.proposal-card,
+.proposal-option {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface), transparent 4%);
+  padding: 18px;
+  overflow: hidden;
+}
+
+.proposal-hero-facts article {
+  backdrop-filter: blur(14px);
+  background: rgba(20, 20, 22, .82);
+}
+
+[data-theme="light"] .proposal-hero-facts article {
+  background: rgba(255, 255, 255, .84);
+}
+
+.proposal-hero-facts span {
+  display: inline-flex;
+  margin-bottom: 12px;
+  color: var(--accent);
+  font-size: .78rem;
+  font-weight: 900;
+}
+
+.proposal-hero-facts strong,
+.proposal-card h3,
+.proposal-option h3 {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.proposal-hero-facts p,
+.proposal-option p {
+  color: var(--muted);
+}
+
+.proposal-card-good {
+  border-color: color-mix(in srgb, var(--ok), var(--line) 58%);
+}
+
+.proposal-card-risk {
+  border-color: color-mix(in srgb, var(--warn), var(--line) 58%);
+}
+
+.proposal-card-accent,
+.proposal-option.is-recommended {
+  border-color: color-mix(in srgb, var(--accent), var(--line) 28%);
+  box-shadow: 0 20px 70px rgba(217, 187, 116, .12);
+}
+
+.proposal-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+}
+
+.proposal-list li {
+  padding-left: 2px;
+}
+
+.proposal-option {
+  display: grid;
+  gap: 12px;
+}
+
+.proposal-option dl {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.proposal-option dl div {
+  display: grid;
+  gap: 4px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+
+.proposal-option dt {
+  color: var(--accent);
+  font-size: .78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.proposal-option dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.proposal-table-wrap {
+  margin-top: 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.proposal-table {
+  min-width: 720px;
+}
+
+.proposal-table td:nth-child(2) {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.proposal-reasons {
+  grid-template-columns: 1fr;
+}
+
+.proposal-card .btn {
+  width: 100%;
+  margin-top: 18px;
+}
+
 .site-footer {
   padding: 40px 0 94px;
   border-top: 1px solid #202020;
@@ -1331,8 +1504,15 @@ h3 {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
-  .quiz-options-two,
+  .quiz-options-two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .quiz-contact-method {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .quiz-contact-fields {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1360,6 +1540,20 @@ h3 {
 
   .card-actions {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .proposal-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .proposal-current,
+  .proposal-hero-facts,
+  .proposal-reasons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .proposal-list-two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .cta-inner,
@@ -1406,19 +1600,19 @@ h3 {
   }
 
   .wheel-quiz.is-first-step .quiz-footer {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 18px;
   }
 
   .wheel-quiz.is-first-step .quiz-progress {
     grid-column: 1;
-    width: 100%;
+    width: min(100%, 560px);
   }
 
   .wheel-quiz.is-first-step .quiz-actions {
     grid-column: 2;
-    width: 100%;
-    justify-self: stretch;
+    width: auto;
+    justify-self: end;
     display: flex;
     justify-content: flex-end;
   }
@@ -1471,6 +1665,27 @@ h3 {
 
   .products-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .proposal-hero-inner {
+    grid-template-columns: minmax(0, 1fr) minmax(330px, .44fr);
+    align-items: end;
+  }
+
+  .proposal-hero-facts,
+  .proposal-options,
+  .proposal-reasons {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .proposal-split,
+  .proposal-recommendation {
+    grid-template-columns: minmax(0, .92fr) minmax(360px, .76fr);
+    align-items: start;
+  }
+
+  .proposal-card .btn {
+    width: auto;
   }
 
   .product-layout {

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /proposal.html
+Disallow: /admin-leads.html
+
+Sitemap: https://diskodiler.ru/sitemap.xml

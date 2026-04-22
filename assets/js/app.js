@@ -16,12 +16,18 @@ function qsa(selector, root = document) {
 }
 
 const WHATSAPP_URL = "https://wa.me/79669264666";
+const PATH_PREFIX = window.DISKODILER_PATH_PREFIX || "";
+
+function withPathPrefix(path) {
+  if (!path || /^(https?:|tel:|mailto:|#)/.test(path)) return path;
+  return `${PATH_PREFIX}${path}`;
+}
 
 const sharedNavItems = [
-  { page: "catalog", label: "Каталог", href: "catalog.html" },
-  { page: "product", label: "Пример товара", href: "product.html" },
-  { page: "services", label: "Услуги", href: "services.html" },
-  { page: "about", label: "О компании", href: "about.html" }
+  { page: "catalog", label: "Каталог", href: "diski/" },
+  { page: "services", label: "Услуги", href: "services/" },
+  { page: "about", label: "О компании", href: "about.html" },
+  { page: "contacts", label: "Контакты", href: "contacts/" }
 ];
 
 const sharedPageSettings = {
@@ -67,12 +73,38 @@ const sharedPageSettings = {
     stickyAction: { label: "Подобрать диски", modal: "vin-modal", goal: "sticky_about_vin" },
     footerText: "© 2012–2026 ДискоДилер.",
     vinGoal: "about_vin_submit"
+  },
+  contacts: {
+    topline: "Офис и склад в Санкт-Петербурге",
+    headerAction: { label: "Задать вопрос", modal: "vin-modal", goal: "contacts_header_request" },
+    stickyAction: { label: "Связаться", modal: "vin-modal", goal: "sticky_contacts_request" },
+    footerText: "Контакты ДискоДилер: подбор OEM-дисков, склад, шиномонтаж и доставка.",
+    vinGoal: "contacts_form_submit"
+  },
+  legal: {
+    topline: "Документы и условия",
+    headerAction: { label: "Подобрать по VIN", modal: "vin-modal", goal: "legal_header_vin" },
+    stickyAction: { label: "Подобрать диски", modal: "vin-modal", goal: "sticky_legal_vin" },
+    footerText: "Условия покупки, доставки, гарантии и обработки персональных данных.",
+    vinGoal: "legal_vin_submit"
+  },
+  admin: {
+    topline: "Прототип менеджерской зоны",
+    headerAction: { label: "На сайт", href: "index.html", goal: "admin_to_site" },
+    stickyAction: { label: "На сайт", href: "index.html", goal: "sticky_admin_to_site" },
+    footerText: "Локальный прототип заявок для первого этапа Lean SEO MVP."
+  },
+  proposal: {
+    topline: "Коммерческое предложение по развитию сайта",
+    headerAction: { label: "Обсудить первый этап", href: WHATSAPP_URL, goal: "proposal_header_whatsapp" },
+    stickyAction: { label: "Обсудить MVP", href: WHATSAPP_URL, goal: "proposal_sticky_whatsapp" },
+    footerText: "Внутреннее коммерческое предложение: сравнение текущего сайта, Lean SEO MVP и полной архитектуры развития."
   }
 };
 
 function actionAttributes(action) {
   const goal = action.goal ? ` data-goal="${action.goal}"` : "";
-  if (action.href) return `href="${action.href}"${goal}`;
+  if (action.href) return `href="${withPathPrefix(action.href)}"${goal}`;
   return `type="button" data-open-modal="${action.modal}"${goal}`;
 }
 
@@ -84,13 +116,13 @@ function actionTag(action, className = "btn") {
 function renderHeader(page, config) {
   const desktopNav = sharedNavItems.map((item) => {
     const current = item.page === page ? ' aria-current="page"' : "";
-    return `<a href="${item.href}"${current}>${item.label}</a>`;
+    return `<a href="${withPathPrefix(item.href)}"${current}>${item.label}</a>`;
   }).join("");
   const mobileNav = [
     { page: "home", label: "Главная", href: "index.html" },
     ...sharedNavItems,
     { label: "Позвонить", href: "tel:+79669264666" }
-  ].filter((item) => item.page !== page).map((item) => `<a href="${item.href}">${item.label}</a>`).join("");
+  ].filter((item) => item.page !== page).map((item) => `<a href="${withPathPrefix(item.href)}">${item.label}</a>`).join("");
 
   return `
     <header class="site-header">
@@ -101,8 +133,8 @@ function renderHeader(page, config) {
         </div>
       </div>
       <div class="container header-inner">
-        <a class="logo" href="index.html" aria-label="ДискоДилер на главную">
-          <img src="assets/img/logo.webp" alt="ДискоДилер" width="88" height="88">
+        <a class="logo" href="${withPathPrefix("index.html")}" aria-label="ДискоДилер на главную">
+          <img src="${withPathPrefix("assets/img/logo.webp")}" alt="ДискоДилер" width="88" height="88">
         </a>
         <nav class="nav" aria-label="Основная навигация">${desktopNav}</nav>
         <div class="header-actions">
@@ -123,13 +155,16 @@ function renderFooter(config) {
     <footer class="site-footer">
       <div class="container footer-grid">
         <div>
-          <img class="footer-logo" src="assets/img/logo.webp" alt="ДискоДилер" width="231" height="70" loading="lazy">
+          <img class="footer-logo" src="${withPathPrefix("assets/img/logo.webp")}" alt="ДискоДилер" width="231" height="70" loading="lazy">
           <p class="small">${config.footerText}</p>
         </div>
         <div class="footer-links">
           <a href="tel:+79669264666">+7 (966) 926-46-66</a>
           <a href="${WHATSAPP_URL}" data-goal="footer_whatsapp">WhatsApp</a>
           <a href="mailto:shop@diskodiler.ru">shop@diskodiler.ru</a>
+          <a href="${withPathPrefix("delivery/")}">Доставка</a>
+          <a href="${withPathPrefix("warranty/")}">Гарантия</a>
+          <a href="${withPathPrefix("privacy/")}">Политика данных</a>
           <span class="small">Офис: ул. Салова 27АД, офис 316</span>
           <span class="small">Склад + шиномонтаж: ул. Салова 31с3</span>
         </div>
@@ -141,9 +176,9 @@ function renderFooter(config) {
 function renderFloating(config) {
   return `
     <div class="chat-bubble" aria-label="Быстрая связь">
-      <a href="${WHATSAPP_URL}" aria-label="Написать в WhatsApp" data-goal="chat_whatsapp"><img src="assets/img/messengers/icon-whatsapp.png" alt="" loading="lazy"></a>
-      <button type="button" aria-label="Telegram пока не указан" data-open-modal="contact-modal" data-goal="chat_telegram_fallback"><img src="assets/img/messengers/icon-telegram.png" alt="" loading="lazy"></button>
-      <button type="button" aria-label="Max пока не указан" data-open-modal="contact-modal" data-goal="chat_max_fallback"><img src="assets/img/messengers/icon-max.png" alt="" loading="lazy"></button>
+      <a href="${WHATSAPP_URL}" aria-label="Написать в WhatsApp" data-goal="chat_whatsapp"><img src="${withPathPrefix("assets/img/messengers/icon-whatsapp.png")}" alt="" loading="lazy"></a>
+      <button type="button" aria-label="Telegram пока не указан" data-open-modal="contact-modal" data-goal="chat_telegram_fallback"><img src="${withPathPrefix("assets/img/messengers/icon-telegram.png")}" alt="" loading="lazy"></button>
+      <button type="button" aria-label="Max пока не указан" data-open-modal="contact-modal" data-goal="chat_max_fallback"><img src="${withPathPrefix("assets/img/messengers/icon-max.png")}" alt="" loading="lazy"></button>
     </div>
     <div class="sticky-mobile-cta">${actionTag(config.stickyAction)}</div>
   `;
@@ -324,6 +359,59 @@ function normalizeVin(value) {
   return value.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
 }
 
+const LEADS_KEY = "diskodiler-leads";
+
+function formDataToObject(form) {
+  const data = {};
+  const formData = new FormData(form);
+
+  formData.forEach((value, key) => {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+      data[key] = Array.isArray(data[key]) ? [...data[key], value] : [data[key], value];
+    } else {
+      data[key] = value;
+    }
+  });
+
+  return data;
+}
+
+function collectUtm() {
+  const params = new URLSearchParams(window.location.search);
+  return Object.fromEntries([...params.entries()].filter(([key]) => key.startsWith("utm_") || key === "yclid" || key === "gclid"));
+}
+
+function readLeadSubmissions() {
+  try {
+    return JSON.parse(localStorage.getItem(LEADS_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveLeadSubmission(type, form, extra = {}) {
+  const lead = {
+    id: `lead-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    createdAt: new Date().toISOString(),
+    status: "new",
+    type,
+    goal: form?.dataset.goal || extra.goal || "",
+    page: window.location.pathname || "/",
+    title: document.title,
+    fields: form ? formDataToObject(form) : {},
+    utm: collectUtm(),
+    ...extra
+  };
+
+  try {
+    localStorage.setItem(LEADS_KEY, JSON.stringify([lead, ...readLeadSubmissions()].slice(0, 100)));
+  } catch {
+    // В статичном прототипе это запасной слой. На Laravel заявки уйдут в БД.
+  }
+
+  return lead;
+}
+
 function initForms() {
   qsa("[data-vin-form]").forEach((form) => {
     const notice = qs(".notice", form.closest(".vin-widget, .vin-panel, .modal-card") || document);
@@ -337,9 +425,10 @@ function initForms() {
         return;
       }
       input?.removeAttribute("aria-invalid");
+      saveLeadSubmission("vin_selection", form, { vin });
       reachGoal(form.dataset.goal || "vin_submit");
       if (notice) {
-        notice.textContent = "VIN принят. Менеджер проверит комплектацию, OEM-артикулы и совместимость по вылету/PCD.";
+        notice.textContent = "Заявка сохранена. Менеджер проверит комплектацию, OEM-артикулы и совместимость по вылету/PCD.";
         notice.classList.add("is-visible");
       }
     });
@@ -348,10 +437,11 @@ function initForms() {
   qsa("[data-lead-form]").forEach((form) => {
     form.addEventListener("submit", (event) => {
       event.preventDefault();
+      saveLeadSubmission("lead", form);
       reachGoal(form.dataset.goal || "lead_submit");
       const notice = qs(".notice", form.parentElement);
       if (notice) {
-        notice.textContent = "Заявка сохранена. Для демонстрации сайта отправка подключается к CRM на этапе интеграции.";
+        notice.textContent = "Заявка сохранена. В MVP она будет уходить в базу, уведомление менеджеру и админку.";
         notice.classList.add("is-visible");
       }
     });
@@ -384,6 +474,7 @@ function initWheelQuiz() {
     const progressValues = ["6%", "40%", "60%", "80%", "100%"];
     const brandSelect = qs("[data-quiz-brand]", form);
     const modelSelect = qs("[data-quiz-model]", form);
+    const phoneInput = qs("[data-quiz-phone]", form);
     let current = 0;
 
     function option(value, label = value) {
@@ -410,12 +501,30 @@ function initWheelQuiz() {
       return qsa(`[name="${name}"]:checked`, form).length > 0;
     }
 
-    function syncContactRequirement() {
-      const telegram = qs("[name='telegram']", form);
-      const method = selectedRadio("contactMethod")?.value;
-      if (!telegram) return;
-      telegram.required = method === "Telegram";
-      if (method !== "Telegram") telegram.removeAttribute("aria-invalid");
+    function formatPhone(value) {
+      let digits = value.replace(/\D/g, "");
+      if (digits.startsWith("8")) digits = `7${digits.slice(1)}`;
+      if (!digits.startsWith("7")) digits = `7${digits}`;
+      digits = digits.slice(0, 11);
+
+      const city = digits.slice(1, 4);
+      const first = digits.slice(4, 7);
+      const second = digits.slice(7, 9);
+      const third = digits.slice(9, 11);
+
+      let formatted = "+7";
+      if (city) formatted += ` (${city}`;
+      if (city.length === 3) formatted += ")";
+      if (first) formatted += ` ${first}`;
+      if (second) formatted += `-${second}`;
+      if (third) formatted += `-${third}`;
+
+      return formatted;
+    }
+
+    function syncPhoneMask() {
+      if (!phoneInput || !phoneInput.value.trim()) return;
+      phoneInput.value = formatPhone(phoneInput.value);
     }
 
     function updateOptionStates() {
@@ -446,13 +555,12 @@ function initWheelQuiz() {
       if (index === 2) valid = Boolean(selectedRadio("tires"));
       if (index === 3) valid = Boolean(qs("[name='city']", step)?.value.trim());
       if (index === 4) {
-        syncContactRequirement();
-        const method = selectedRadio("contactMethod")?.value;
-        const telegram = qs("[name='telegram']", step);
+        syncPhoneMask();
+        const name = qs("[name='name']", step);
         const phone = qs("[name='phone']", step);
         const consent = qs("[name='consent']", step);
-        valid = Boolean(phone?.value.trim()) && Boolean(consent?.checked);
-        if (method === "Telegram") valid = valid && Boolean(telegram?.value.trim());
+        const phoneDigits = phone?.value.replace(/\D/g, "") || "";
+        valid = Boolean(name?.value.trim()) && phoneDigits.length === 11 && Boolean(consent?.checked);
       }
 
       if (shouldMark) markStep(step, !valid);
@@ -490,11 +598,11 @@ function initWheelQuiz() {
     qsa("input, textarea", form).forEach((field) => {
       field.addEventListener("input", () => {
         field.removeAttribute("aria-invalid");
-        syncContactRequirement();
+        if (field.matches("[data-quiz-phone]")) syncPhoneMask();
         updateControls();
       });
       field.addEventListener("change", () => {
-        syncContactRequirement();
+        if (field.matches("[data-quiz-phone]")) syncPhoneMask();
         updateOptionStates();
         updateControls();
       });
@@ -528,6 +636,7 @@ function initWheelQuiz() {
         updateControls();
         return;
       }
+      saveLeadSubmission("wheel_quiz", form);
       reachGoal("wheel_quiz_submit");
       if (notice) {
         notice.textContent = "Заявка сохранена. Менеджер подготовит подборку дисков и свяжется с вами.";
@@ -635,6 +744,62 @@ const catalogItems = [
   }
 ];
 
+function initLeadsAdmin() {
+  const root = qs("[data-leads-admin]");
+  if (!root) return;
+
+  function fieldSummary(lead) {
+    const fields = lead.fields || {};
+    return [
+      fields.name && `Имя: ${fields.name}`,
+      fields.phone && `Телефон: ${fields.phone}`,
+      fields.telegram && `Telegram: ${fields.telegram}`,
+      fields.vin && `VIN: ${fields.vin}`,
+      fields.brand && `Марка: ${fields.brand}`,
+      fields.model && `Модель: ${fields.model}`,
+      fields.city && `Город: ${fields.city}`,
+      fields.message && `Комментарий: ${fields.message}`
+    ].filter(Boolean).join("; ") || "Данные формы не заполнены";
+  }
+
+  function render() {
+    const leads = readLeadSubmissions();
+    root.innerHTML = leads.length
+      ? `
+        <div class="catalog-toolbar">
+          <strong>${leads.length} заявок в локальном прототипе</strong>
+          <button class="btn secondary" type="button" data-clear-leads>Очистить</button>
+        </div>
+        <table class="pricing-table">
+          <thead><tr><th>Дата</th><th>Тип</th><th>Контакт и запрос</th><th>Страница</th></tr></thead>
+          <tbody>
+            ${leads.map((lead) => `
+              <tr>
+                <td>${new Date(lead.createdAt).toLocaleString("ru-RU")}</td>
+                <td>${lead.type}</td>
+                <td>${fieldSummary(lead)}</td>
+                <td>${lead.page}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `
+      : `
+        <div class="empty-state is-visible">
+          <h2>Заявок пока нет</h2>
+          <p class="small">Отправьте VIN, заявку на услугу или квиз на сайте, и запись появится здесь. Это локальный прототип будущей БД и Filament-админки.</p>
+        </div>
+      `;
+
+    qs("[data-clear-leads]", root)?.addEventListener("click", () => {
+      localStorage.removeItem(LEADS_KEY);
+      render();
+    });
+  }
+
+  render();
+}
+
 function initCatalog() {
   const grid = qs("[data-products-grid]");
   const form = qs("[data-filter-form]");
@@ -668,7 +833,7 @@ function initCatalog() {
           </div>
           <p class="price">${item.price}</p>
           <div class="card-actions">
-            <a class="btn" href="product.html" data-goal="catalog_product_details">Подробнее</a>
+            <a class="btn" href="${withPathPrefix("product/19-style-793-individual-oem-36118089896/")}" data-goal="catalog_product_details">Подробнее</a>
           </div>
         </div>
       </article>
@@ -822,6 +987,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initGallery();
   initTradeIn();
   initRecentlyViewed();
+  initLeadsAdmin();
   initExitPopup();
   initChatBubbleMotion();
 });

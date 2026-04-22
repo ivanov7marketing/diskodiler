@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Оригинальные диски BMW, Mercedes, Porsche в Санкт-Петербурге | ДискоДилер</title>
   <meta name="description" content="ДискоДилер продает оригинальные OEM диски BMW, Mercedes-Benz, Porsche, Range Rover и Lamborghini в Санкт-Петербурге с подбором по VIN, гарантией подлинности и доставкой по РФ.">
+  <link rel="canonical" href="https://diskodiler.ru/">
   <link rel="icon" href="assets/img/logo.webp" type="image/webp">
   <link rel="preload" href="assets/css/styles.css" as="style">
   <link rel="stylesheet" href="assets/css/styles.css">
@@ -108,14 +109,15 @@
                 <div class="quiz-contact">
                   <div class="quiz-contact-method" role="radiogroup" aria-label="Способ связи">
                     <label class="quiz-option" data-quiz-option><input type="radio" name="contactMethod" value="Telegram" checked><span>Telegram</span></label>
+                    <label class="quiz-option" data-quiz-option><input type="radio" name="contactMethod" value="Max"><span>Max</span></label>
                     <label class="quiz-option" data-quiz-option><input type="radio" name="contactMethod" value="Звонок"><span>Звонок</span></label>
                   </div>
-                  <label class="sr-only" for="quiz-telegram">Ник в Telegram</label>
-                  <input class="quiz-field" id="quiz-telegram" name="telegram" autocomplete="off" placeholder="@username" required>
-                  <label class="sr-only" for="quiz-name">Ваше имя</label>
-                  <input class="quiz-field" id="quiz-name" name="name" autocomplete="name" placeholder="Ваше имя">
-                  <label class="sr-only" for="quiz-phone">Номер телефона</label>
-                  <input class="quiz-field" id="quiz-phone" name="phone" autocomplete="tel" placeholder="+7 (___) ___-__-__" required>
+                  <div class="quiz-contact-fields">
+                    <label class="sr-only" for="quiz-name">Ваше имя</label>
+                    <input class="quiz-field" id="quiz-name" name="name" autocomplete="name" placeholder="Ваше имя" required>
+                    <label class="sr-only" for="quiz-phone">Телефон</label>
+                    <input class="quiz-field" id="quiz-phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required data-quiz-phone>
+                  </div>
                   <label class="quiz-consent">
                     <input type="checkbox" name="consent" required>
                     <span>Я даю согласие на обработку персональных данных и принимаю условия публичной оферты</span>
@@ -157,19 +159,19 @@
             <p class="lead">Модельные линейки собраны по кодам кузова и заводским параметрам, чтобы не ошибиться с посадкой и вылетом.</p>
           </div>
           <div class="grid brand-grid">
-            <a class="brand-tile" href="catalog.html?brand=BMW" style="background-image:url('https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80')">
+            <a class="brand-tile" href="diski/?brand=BMW" style="background-image:url('https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80')">
               <h3>BMW</h3><span class="small">X5 G05, X3 G01, M-серия</span>
             </a>
-            <a class="brand-tile" href="catalog.html?brand=Mercedes-Benz" style="background-image:url('https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=800&q=80')">
+            <a class="brand-tile" href="diski/?brand=Mercedes-Benz" style="background-image:url('https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=800&q=80')">
               <h3>Mercedes-Benz</h3><span class="small">GLE, GLS, E, S, AMG</span>
             </a>
-            <a class="brand-tile" href="catalog.html?brand=Porsche" style="background-image:url('https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=800&q=80')">
+            <a class="brand-tile" href="diski/?brand=Porsche" style="background-image:url('https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=800&q=80')">
               <h3>Porsche</h3><span class="small">Cayenne, Macan, Panamera</span>
             </a>
-            <a class="brand-tile" href="catalog.html?brand=Range Rover" style="background-image:url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=800&q=80')">
+            <a class="brand-tile" href="diski/?brand=Range Rover" style="background-image:url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=800&q=80')">
               <h3>Range Rover</h3><span class="small">Sport, Vogue, Velar</span>
             </a>
-            <a class="brand-tile" href="catalog.html?brand=Lamborghini" style="background-image:url('https://images.unsplash.com/photo-1544636331-e26879cd4d9b?auto=format&fit=crop&w=800&q=80')">
+            <a class="brand-tile" href="diski/?brand=Lamborghini" style="background-image:url('https://images.unsplash.com/photo-1544636331-e26879cd4d9b?auto=format&fit=crop&w=800&q=80')">
               <h3>Lamborghini</h3><span class="small">Urus OEM</span>
             </a>
           </div>
@@ -206,13 +208,13 @@
             <h2>Чаще всего подбираем</h2>
           </div>
           <div class="grid models-grid">
-            <a class="model-tile" href="catalog.html?brand=BMW&model=X5%20G05"><span class="model-code">G05</span><h3>BMW X5</h3><p class="small">R19–R22, M Performance</p></a>
-            <a class="model-tile" href="catalog.html?brand=BMW&model=X3%20G01"><span class="model-code">G01</span><h3>BMW X3</h3><p class="small">R18–R21, Y-Spoke</p></a>
-            <a class="model-tile" href="catalog.html?brand=BMW&model=3%2F4%20G20"><span class="model-code">G20</span><h3>BMW 3 / 4</h3><p class="small">Style 793 Individual</p></a>
-            <a class="model-tile" href="catalog.html?brand=BMW"><span class="model-code">G80</span><h3>BMW M3 / M4</h3><p class="small">Double Spoke 829M</p></a>
-            <a class="model-tile" href="catalog.html?brand=Porsche&model=Cayenne"><span class="model-code">9Y0</span><h3>Porsche Cayenne</h3><p class="small">RS Spyder Design</p></a>
-            <a class="model-tile" href="catalog.html?brand=Mercedes-Benz&model=GLE%20W167"><span class="model-code">W167</span><h3>Mercedes GLE</h3><p class="small">AMG, Bicolor</p></a>
-            <a class="model-tile" href="catalog.html?brand=Range%20Rover&model=Sport"><span class="model-code">L461</span><h3>Range Rover Sport</h3><p class="small">R22–R23 upgrades</p></a>
+            <a class="model-tile" href="diski/?brand=BMW&model=X5%20G05"><span class="model-code">G05</span><h3>BMW X5</h3><p class="small">R19–R22, M Performance</p></a>
+            <a class="model-tile" href="diski/?brand=BMW&model=X3%20G01"><span class="model-code">G01</span><h3>BMW X3</h3><p class="small">R18–R21, Y-Spoke</p></a>
+            <a class="model-tile" href="diski/?brand=BMW&model=3%2F4%20G20"><span class="model-code">G20</span><h3>BMW 3 / 4</h3><p class="small">Style 793 Individual</p></a>
+            <a class="model-tile" href="diski/?brand=BMW"><span class="model-code">G80</span><h3>BMW M3 / M4</h3><p class="small">Double Spoke 829M</p></a>
+            <a class="model-tile" href="diski/?brand=Porsche&model=Cayenne"><span class="model-code">9Y0</span><h3>Porsche Cayenne</h3><p class="small">RS Spyder Design</p></a>
+            <a class="model-tile" href="diski/?brand=Mercedes-Benz&model=GLE%20W167"><span class="model-code">W167</span><h3>Mercedes GLE</h3><p class="small">AMG, Bicolor</p></a>
+            <a class="model-tile" href="diski/?brand=Range%20Rover&model=Sport"><span class="model-code">L461</span><h3>Range Rover Sport</h3><p class="small">R22–R23 upgrades</p></a>
             <button class="model-tile" type="button" data-open-modal="vin-modal" data-goal="popular_model_vin"><span class="model-code">VIN</span><h3>Не уверены?</h3><p class="small">Проверим совместимость</p></button>
           </div>
         </div>
