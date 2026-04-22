@@ -36,6 +36,20 @@ class Lead extends Model
         'WhatsApp' => 'WhatsApp',
     ];
 
+    public const TRAFFIC_CHANNEL_OPTIONS = [
+        'seo' => 'SEO',
+        'direct' => 'РџСЂСЏРјРѕР№',
+        'yandex_direct' => 'Р”РёСЂРµРєС‚',
+        'other' => 'Р”СЂСѓРіРёРµ',
+    ];
+
+    public const TRAFFIC_CHANNEL_COLORS = [
+        'seo' => 'info',
+        'direct' => 'success',
+        'yandex_direct' => 'warning',
+        'other' => 'gray',
+    ];
+
     protected $fillable = [
         'type',
         'status',
@@ -48,6 +62,9 @@ class Lead extends Model
         'manager_comment',
         'handled_at',
         'source_page',
+        'referer_url',
+        'referer_host',
+        'traffic_channel',
         'goal',
         'utm',
         'payload',
@@ -80,5 +97,15 @@ class Lead extends Model
     public static function statusColor(?string $status): string
     {
         return self::STATUS_COLORS[$status] ?? 'gray';
+    }
+
+    public function getTrafficChannelLabelAttribute(): string
+    {
+        return self::TRAFFIC_CHANNEL_OPTIONS[$this->traffic_channel] ?? $this->traffic_channel ?? 'РќРµ РѕРїСЂРµРґРµР»РµРЅРѕ';
+    }
+
+    public static function trafficChannelColor(?string $channel): string
+    {
+        return self::TRAFFIC_CHANNEL_COLORS[$channel] ?? 'gray';
     }
 }

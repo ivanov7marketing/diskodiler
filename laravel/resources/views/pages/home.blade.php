@@ -107,6 +107,7 @@
           <div class="trust-item">Партнёр BMW</div>
           <div class="trust-item">Доставка по РФ</div>
           <div class="trust-item">Trade-in</div>
+          <div class="trust-item">Ремонт</div>
           <div class="trust-item">Шиномонтаж</div>
         </div>
       </section>

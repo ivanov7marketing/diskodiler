@@ -17,7 +17,9 @@ function qsa(selector, root = document) {
 
 const WHATSAPP_URL = "https://wa.me/79669264666";
 const PATH_PREFIX = window.DISKODILER_PATH_PREFIX || "";
+const HOME_PATH = PATH_PREFIX || "/";
 const LEADS_ENDPOINT = window.DISKODILER_LEADS_ENDPOINT || null;
+const CALLBACK_HEADER_ACTION = { label: "Перезвонить", modal: "callback-modal", goal: "header_callback_click" };
 
 function withPathPrefix(path) {
   if (!path || /^(https?:|tel:|mailto:|#)/.test(path)) return path;
@@ -99,8 +101,8 @@ const sharedPageSettings = {
   },
   admin: {
     topline: "Прототип менеджерской зоны",
-    headerAction: { label: "На сайт", href: "index.html", goal: "admin_to_site" },
-    stickyAction: { label: "На сайт", href: "index.html", goal: "sticky_admin_to_site" },
+    headerAction: { label: "На сайт", href: HOME_PATH, goal: "admin_to_site" },
+    stickyAction: { label: "На сайт", href: HOME_PATH, goal: "sticky_admin_to_site" },
     footerText: "Локальный прототип заявок для первого этапа Lean SEO MVP."
   },
   proposal: {
@@ -128,7 +130,7 @@ function renderHeader(page, config) {
     return `<a href="${withPathPrefix(item.href)}"${current}>${item.label}</a>`;
   }).join("");
   const mobileNav = [
-    { page: "home", label: "Главная", href: "index.html" },
+    { page: "home", label: "Главная", href: HOME_PATH },
     ...sharedNavItems,
     { label: "Позвонить", href: "tel:+79669264666" }
   ].filter((item) => item.page !== page).map((item) => `<a href="${withPathPrefix(item.href)}">${item.label}</a>`).join("");
@@ -142,13 +144,13 @@ function renderHeader(page, config) {
         </div>
       </div>
       <div class="container header-inner">
-        <a class="logo" href="${withPathPrefix("index.html")}" aria-label="ДискоДилер на главную">
+        <a class="logo" href="${HOME_PATH}" aria-label="ДискоДилер на главную">
           <img src="${withPathPrefix("assets/img/logo.webp")}" alt="ДискоДилер" width="88" height="88">
         </a>
         <nav class="nav" aria-label="Основная навигация">${desktopNav}</nav>
         <div class="header-actions">
           <button class="icon-btn" type="button" data-theme-toggle aria-label="Переключить тему">◐</button>
-          ${actionTag(config.headerAction, "btn desktop-only")}
+          ${actionTag(CALLBACK_HEADER_ACTION, "btn desktop-only")}
           <button class="menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-panel">Меню</button>
         </div>
       </div>
@@ -182,6 +184,67 @@ function renderFooter(config) {
   `;
 }
 
+function renderFooterV2(config) {
+  const footerNav = [
+    { label: "Каталог", href: "diski/" },
+    { label: "Услуги", href: "services/" },
+    { label: "Доставка", href: "delivery/" },
+    { label: "О компании", href: "about.html" }
+  ];
+
+  const footerPurchase = [
+    { label: "Гарантия", href: "warranty/" },
+    { label: "Политика данных", href: "privacy/" },
+    { label: "Подбор по VIN", href: "services/vin-selection/" },
+    { label: "Шиномонтаж", href: "services/premium-tire-fitting/" }
+  ];
+
+  return `
+    <footer class="site-footer">
+      <div class="container footer-shell">
+        <div class="footer-main">
+          <div class="footer-brand">
+            <span class="footer-title">ДискоДилер</span>
+            <a class="footer-logo-link" href="${HOME_PATH}" aria-label="ДискоДилер на главную">
+              <img class="footer-logo" src="${withPathPrefix("assets/img/logo.webp")}" alt="ДискоДилер" width="231" height="70" loading="lazy">
+            </a>
+            <p class="footer-lead">${config.footerText}</p>
+            <div class="footer-actions">
+              <a class="footer-chip" href="tel:+79669264666">Позвонить</a>
+              <a class="footer-chip" href="${WHATSAPP_URL}" data-goal="footer_whatsapp">WhatsApp</a>
+              <a class="footer-chip" href="mailto:shop@diskodiler.ru">E-mail</a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <span class="footer-title">Навигация</span>
+            <div class="footer-list">
+              ${footerNav.map((item) => `<a href="${withPathPrefix(item.href)}">${item.label}</a>`).join("")}
+            </div>
+          </div>
+          <div class="footer-column">
+            <span class="footer-title">Покупка</span>
+            <div class="footer-list">
+              ${footerPurchase.map((item) => `<a href="${withPathPrefix(item.href)}">${item.label}</a>`).join("")}
+            </div>
+          </div>
+          <div class="footer-column footer-column--contact">
+            <span class="footer-title">Контакты</span>
+            <div class="footer-contact-list">
+              <a href="tel:+79669264666">+7 (966) 926-46-66</a>
+              <a href="mailto:shop@diskodiler.ru">shop@diskodiler.ru</a>
+              <span class="footer-note">Офис: ул. Салова 27АД, офис 316</span>
+              <span class="footer-note">Склад и шиномонтаж: ул. Салова 31с3</span>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-copy">© 2012–2026 ДискоДилер. Оригинальные OEM-диски, подбор по VIN, доставка по РФ. Склад и сервис в Санкт-Петербурге.</p>
+        </div>
+      </div>
+    </footer>
+  `;
+}
+
 function renderFloating(config) {
   return `
     <div class="chat-bubble" aria-label="Быстрая связь">
@@ -189,7 +252,16 @@ function renderFloating(config) {
       <button type="button" aria-label="Telegram пока не указан" data-open-modal="contact-modal" data-goal="chat_telegram_fallback"><img src="${withPathPrefix("assets/img/messengers/icon-telegram.png")}" alt="" loading="lazy"></button>
       <button type="button" aria-label="Max пока не указан" data-open-modal="contact-modal" data-goal="chat_max_fallback"><img src="${withPathPrefix("assets/img/messengers/icon-max.png")}" alt="" loading="lazy"></button>
     </div>
-    <div class="sticky-mobile-cta">${actionTag(config.stickyAction)}</div>
+    <div class="sticky-mobile-cta" aria-label="Быстрая связь">
+      <div class="sticky-mobile-bar">
+        <a class="btn secondary sticky-mobile-call" href="tel:+79669264666" data-goal="sticky_mobile_call">Позвонить</a>
+        <div class="sticky-mobile-actions">
+          <a class="sticky-mobile-icon" href="${WHATSAPP_URL}" aria-label="Написать в WhatsApp" data-goal="sticky_mobile_whatsapp"><img src="${withPathPrefix("assets/img/messengers/icon-whatsapp.png")}" alt="" loading="lazy"></a>
+          <button class="sticky-mobile-icon" type="button" aria-label="Telegram пока не указан" data-open-modal="contact-modal" data-goal="sticky_mobile_telegram_fallback"><img src="${withPathPrefix("assets/img/messengers/icon-telegram.png")}" alt="" loading="lazy"></button>
+          <button class="sticky-mobile-icon" type="button" aria-label="Max пока не указан" data-open-modal="contact-modal" data-goal="sticky_mobile_max_fallback"><img src="${withPathPrefix("assets/img/messengers/icon-max.png")}" alt="" loading="lazy"></button>
+        </div>
+      </div>
+    </div>
   `;
 }
 
@@ -222,6 +294,30 @@ function renderContactModal() {
           <button class="icon-btn" type="button" data-close-modal aria-label="Закрыть">×</button>
         </div>
         <a class="btn" href="${WHATSAPP_URL}" data-goal="telegram_fallback_whatsapp">Написать в WhatsApp</a>
+      </div>
+    </div>
+  `;
+}
+
+function renderCallbackModal() {
+  return `
+    <div class="modal" id="callback-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="callback-modal-title">
+      <div class="modal-card">
+        <div class="modal-head">
+          <div><h2 id="callback-modal-title">Перезвоним вам</h2><p class="small">Оставьте имя и телефон. Менеджер свяжется с вами в ближайшее рабочее время.</p></div>
+          <button class="icon-btn" type="button" data-close-modal aria-label="Закрыть">×</button>
+        </div>
+        <form data-lead-form data-goal="header_callback_submit">
+          <input type="hidden" name="requestType" value="Перезвонить">
+          <input type="hidden" name="contactMethod" value="Звонок">
+          <input type="hidden" name="message" value="Запрос на обратный звонок из шапки сайта">
+          <div class="lead-fields-row">
+            <input class="input" name="name" placeholder="Ваше имя" autocomplete="name" required>
+            <input class="input" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" required>
+          </div>
+          <button class="btn" type="submit">Жду звонка</button>
+        </form>
+        <div class="notice" role="status"></div>
       </div>
     </div>
   `;
@@ -341,12 +437,13 @@ function renderSharedLayout() {
   const modals = qs("[data-shared-modals]");
 
   if (header) header.outerHTML = renderHeader(page, config);
-  if (footer) footer.outerHTML = renderFooter(config);
+  if (footer) footer.outerHTML = renderFooterV2(config);
   if (floating) floating.outerHTML = renderFloating(config);
   if (modals) {
     modals.outerHTML = [
       renderVinModal(config),
       renderContactModal(),
+      renderCallbackModal(),
       renderServiceModal(config),
       renderProductLeadModals(config),
       renderExitPopup(config)
@@ -474,6 +571,7 @@ function saveLeadSubmission(type, form, extra = {}) {
     type,
     goal: form?.dataset.goal || extra.goal || "",
     page: window.location.pathname || "/",
+    referer_url: document.referrer || null,
     title: document.title,
     fields: form ? formDataToObject(form) : {},
     utm: collectUtm(),

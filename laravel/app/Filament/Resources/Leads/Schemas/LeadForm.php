@@ -73,6 +73,14 @@ class LeadForm
                         TextInput::make('source_page')
                             ->label('Страница')
                             ->columnSpanFull(),
+                        Select::make('traffic_channel')
+                            ->label('РљР°РЅР°Р»')
+                            ->options(Lead::TRAFFIC_CHANNEL_OPTIONS),
+                        TextInput::make('referer_host')
+                            ->label('Referer host'),
+                        TextInput::make('referer_url')
+                            ->label('Referer URL')
+                            ->columnSpanFull(),
                         DateTimePicker::make('created_at')
                             ->label('Дата создания')
                             ->disabled()

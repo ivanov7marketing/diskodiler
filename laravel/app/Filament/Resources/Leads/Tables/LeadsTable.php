@@ -3,11 +3,13 @@
 namespace App\Filament\Resources\Leads\Tables;
 
 use App\Models\Lead;
+use App\Support\LeadAttribution;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -74,6 +76,23 @@ class LeadsTable
                     ->limit(42)
                     ->searchable()
                     ->placeholder('—'),
+                TextColumn::make('traffic_channel')
+                    ->label('Канал')
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state): string => Lead::TRAFFIC_CHANNEL_OPTIONS[$state] ?? $state ?? 'Не определено')
+                    ->color(fn (?string $state): string => Lead::trafficChannelColor($state))
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('referer_host')
+                    ->label('Referer host')
+                    ->copyable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->placeholder('—'),
+                TextColumn::make('referer_url')
+                    ->label('Referer URL')
+                    ->copyable()
+                    ->limit(42)
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->placeholder('—'),
                 TextColumn::make('manager_comment')
                     ->label('Заметка')
                     ->limit(42)
@@ -96,15 +115,107 @@ class LeadsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('created_window')
+                    ->label('Период')
+                    ->options([
+                        'today' => 'Сегодня',
+                        '24' => '24 часа',
+                        '7' => '7 дней',
+                        '30' => '30 дней',
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        $period = $data['value'] ?? null;
+
+                        if ($period === 'today') {
+                            return $query->whereBetween('created_at', [now()->startOfDay(), now()]);
+                        }
+
+                        if ($period === '24') {
+                            return $query->whereBetween('created_at', [
+                                now()->subDay(),
+                                now(),
+                            ]);
+                        }
+
+                        if (in_array($period, ['7', '30'], true)) {
+                            $days = (int) $period;
+
+                            return $query->whereBetween('created_at', [
+                                now()->startOfDay()->subDays($days - 1),
+                                now(),
+                            ]);
+                        }
+
+                        return $query;
+                    }),
                 SelectFilter::make('status')
                     ->label('Статус')
                     ->options(Lead::STATUS_OPTIONS),
                 SelectFilter::make('type')
                     ->label('Тип')
                     ->options(Lead::TYPE_OPTIONS),
+                SelectFilter::make('traffic_channel')
+                    ->label('Канал')
+                    ->options(Lead::TRAFFIC_CHANNEL_OPTIONS),
                 SelectFilter::make('contact_method')
                     ->label('Способ связи')
                     ->options(Lead::CONTACT_METHOD_OPTIONS),
+                Filter::make('source_page_path')
+                    ->label('Страница')
+                    ->schema([
+                        TextInput::make('path')
+                            ->label('Путь страницы')
+                            ->placeholder('/services'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        $rawPath = trim((string) ($data['path'] ?? ''));
+
+                        if ($rawPath === '') {
+                            return $query;
+                        }
+
+                        if ($rawPath === 'Не определено') {
+                            return $query->where(fn (Builder $query): Builder => $query
+                                ->whereNull('source_page')
+                                ->orWhere('source_page', ''));
+                        }
+
+                        $path = LeadAttribution::normalizeSourcePage($rawPath);
+
+                        if ($path === null) {
+                            return $query;
+                        }
+
+                        return $query->where('source_page', $path);
+                    }),
+                Filter::make('source_page_path')
+                    ->label('Страница')
+                    ->schema([
+                        TextInput::make('path')
+                            ->label('Путь страницы')
+                            ->placeholder('/services'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        $rawPath = trim((string) ($data['path'] ?? ''));
+
+                        if ($rawPath === '') {
+                            return $query;
+                        }
+
+                        if ($rawPath === 'Не определено') {
+                            return $query->where(fn (Builder $query): Builder => $query
+                                ->whereNull('source_page')
+                                ->orWhere('source_page', ''));
+                        }
+
+                        $path = LeadAttribution::normalizeSourcePage($rawPath);
+
+                        if ($path === null) {
+                            return $query;
+                        }
+
+                        return $query->where('source_page', $path);
+                    }),
                 Filter::make('created_at_range')
                     ->label('Дата создания')
                     ->schema([
