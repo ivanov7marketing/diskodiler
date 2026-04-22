@@ -16,7 +16,7 @@ class CatalogHealthWidget extends Widget
 
     protected int | string | array $columnSpan = [
         'default' => 'full',
-        'md' => 'full',
+        'md' => 4,
     ];
 
     protected function getViewData(): array

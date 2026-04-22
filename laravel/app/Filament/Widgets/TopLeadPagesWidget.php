@@ -13,7 +13,7 @@ class TopLeadPagesWidget extends Widget
 
     protected static bool $isLazy = false;
 
-    protected static ?int $sort = 30;
+    protected static ?int $sort = 40;
 
     protected string $view = 'filament.widgets.top-lead-pages-widget';
 

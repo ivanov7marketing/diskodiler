@@ -13,7 +13,7 @@ class LeadSourcesWidget extends Widget
 
     protected static bool $isLazy = false;
 
-    protected static ?int $sort = 40;
+    protected static ?int $sort = 30;
 
     protected string $view = 'filament.widgets.lead-sources-widget';
 

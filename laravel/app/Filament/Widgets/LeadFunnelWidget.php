@@ -19,7 +19,7 @@ class LeadFunnelWidget extends Widget
 
     protected int | string | array $columnSpan = [
         'default' => 'full',
-        'md' => 'full',
+        'md' => 8,
     ];
 
     protected function getViewData(): array
