@@ -21,21 +21,28 @@ jobs:
           chmod 600 ~/.ssh/timeweb_key
           ssh-keyscan -p "${{ secrets.TIMEWEB_PORT || 22 }}" "${{ secrets.TIMEWEB_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Deploy static files
+      - name: Deploy Laravel app
         run: |
           rsync -az --delete \
-            --exclude '.git/' \
-            --exclude '.github/' \
-            --exclude '.nojekyll' \
+            --exclude '.env' \
+            --exclude '.env.*' \
+            --exclude '.gitignore' \
+            --exclude '.editorconfig' \
+            --exclude '.npmrc' \
             --exclude 'README.md' \
-            --exclude 'laravel/.env' \
-            --exclude 'laravel/.env.*' \
-            --exclude 'laravel/bootstrap/cache/' \
-            --exclude 'laravel/public/build/' \
-            --exclude 'laravel/public/storage/' \
-            --exclude 'laravel/storage/' \
+            --exclude 'docs/' \
+            --exclude 'tests/' \
+            --exclude 'node_modules/' \
+            --exclude 'vendor/' \
+            --exclude '.npm-cache/' \
+            --exclude 'bootstrap/cache/' \
+            --exclude 'public/build/' \
+            --exclude 'public/storage/' \
+            --exclude 'storage/' \
+            --exclude 'database/database.sqlite' \
+            --exclude 'phpunit.xml' \
             -e "ssh -i ~/.ssh/timeweb_key -p ${{ secrets.TIMEWEB_PORT || 22 }}" \
-            ./ "${{ secrets.TIMEWEB_USER }}@${{ secrets.TIMEWEB_HOST }}:${{ secrets.TIMEWEB_PATH }}/"
+            ./laravel/ "${{ secrets.TIMEWEB_USER }}@${{ secrets.TIMEWEB_HOST }}:${{ secrets.TIMEWEB_PATH }}/laravel/"
 
       - name: Clear Laravel caches
         run: |
