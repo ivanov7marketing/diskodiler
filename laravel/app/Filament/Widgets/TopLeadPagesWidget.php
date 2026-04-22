@@ -13,11 +13,13 @@ class TopLeadPagesWidget extends Widget
 
     protected static bool $isLazy = false;
 
+    protected static ?int $sort = 30;
+
     protected string $view = 'filament.widgets.top-lead-pages-widget';
 
     protected int | string | array $columnSpan = [
         'default' => 'full',
-        'md' => 7,
+        'md' => 8,
     ];
 
     protected function getViewData(): array

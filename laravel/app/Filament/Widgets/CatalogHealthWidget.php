@@ -10,11 +10,13 @@ class CatalogHealthWidget extends Widget
 {
     protected static bool $isLazy = false;
 
+    protected static ?int $sort = 50;
+
     protected string $view = 'filament.widgets.catalog-health-widget';
 
     protected int | string | array $columnSpan = [
         'default' => 'full',
-        'md' => 5,
+        'md' => 'full',
     ];
 
     protected function getViewData(): array

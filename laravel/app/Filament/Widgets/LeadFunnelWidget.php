@@ -13,11 +13,13 @@ class LeadFunnelWidget extends Widget
 
     protected static bool $isLazy = false;
 
+    protected static ?int $sort = 20;
+
     protected string $view = 'filament.widgets.lead-funnel-widget';
 
     protected int | string | array $columnSpan = [
         'default' => 'full',
-        'md' => 8,
+        'md' => 'full',
     ];
 
     protected function getViewData(): array

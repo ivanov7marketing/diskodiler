@@ -43,8 +43,8 @@ class Dashboard extends BaseDashboard
         return [
             LeadPeriodStatsWidget::class,
             LeadFunnelWidget::class,
-            LeadSourcesWidget::class,
             TopLeadPagesWidget::class,
+            LeadSourcesWidget::class,
             CatalogHealthWidget::class,
         ];
     }

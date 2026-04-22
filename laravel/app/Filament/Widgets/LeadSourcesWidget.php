@@ -13,6 +13,8 @@ class LeadSourcesWidget extends Widget
 
     protected static bool $isLazy = false;
 
+    protected static ?int $sort = 40;
+
     protected string $view = 'filament.widgets.lead-sources-widget';
 
     protected int | string | array $columnSpan = [

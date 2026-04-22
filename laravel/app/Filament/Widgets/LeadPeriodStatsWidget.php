@@ -13,6 +13,8 @@ class LeadPeriodStatsWidget extends StatsOverviewWidget
 {
     protected static bool $isLazy = false;
 
+    protected static ?int $sort = 10;
+
     protected int | string | array $columnSpan = [
         'default' => 'full',
     ];

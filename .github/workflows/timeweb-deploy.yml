@@ -28,5 +28,16 @@ jobs:
             --exclude '.github/' \
             --exclude '.nojekyll' \
             --exclude 'README.md' \
+            --exclude 'laravel/.env' \
+            --exclude 'laravel/.env.*' \
+            --exclude 'laravel/bootstrap/cache/' \
+            --exclude 'laravel/public/build/' \
+            --exclude 'laravel/public/storage/' \
+            --exclude 'laravel/storage/' \
             -e "ssh -i ~/.ssh/timeweb_key -p ${{ secrets.TIMEWEB_PORT || 22 }}" \
             ./ "${{ secrets.TIMEWEB_USER }}@${{ secrets.TIMEWEB_HOST }}:${{ secrets.TIMEWEB_PATH }}/"
+
+      - name: Clear Laravel caches
+        run: |
+          ssh -i ~/.ssh/timeweb_key -p "${{ secrets.TIMEWEB_PORT || 22 }}" "${{ secrets.TIMEWEB_USER }}@${{ secrets.TIMEWEB_HOST }}" \
+            "docker exec laravel-app-1 php artisan optimize:clear"
