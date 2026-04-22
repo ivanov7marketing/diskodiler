@@ -1,0 +1,17 @@
+# Local planning, handoff, and prototype artifacts
+/admin-leads.html
+/proposal.html
+/current-site-audit.md
+/deploy-next-handoff.md
+/deploy-production-handoff.md
+/deploy-session-handoff.md
+/laravel-mvp-handoff.md
+/lean-seo-mvp-next-handoff.md
+/lean-seo-mvp-plan.md
+/product-seo-card-next-handoff.md
+/project-architecture-plan.md
+/seo-yandex-google.md
+/Семантическое ядро Яндекс.xlsx
+
+# Local cache
+/laravel/.npm-cache/
